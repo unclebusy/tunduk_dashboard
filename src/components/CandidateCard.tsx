@@ -8,6 +8,7 @@ import {
 import {
   getCandidateWorkflowStatusClassName,
   getCandidateWorkflowStatusLabel,
+  getCandidateWorkflowStatusTextClassName,
 } from '../utils/candidateWorkflowStatus';
 
 interface CandidateCardProps {
@@ -86,8 +87,8 @@ function CandidateCard({ candidate }: CandidateCardProps) {
             <dd>
               <span
                 className={[
-                  'inline-flex rounded-full border px-2.5 py-1 text-xs font-medium',
-                  getCandidateWorkflowStatusClassName(candidate.status),
+                  'inline-flex text-xs font-medium',
+                  getCandidateWorkflowStatusTextClassName(candidate.status),
                 ].join(' ')}
               >
                 {getCandidateWorkflowStatusLabel(candidate.status)}

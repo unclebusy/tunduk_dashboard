@@ -29,3 +29,18 @@ export function getCandidateWorkflowStatusClassName(
       return 'border-rose-200 bg-rose-50 text-rose-700';
   }
 }
+
+export function getCandidateWorkflowStatusTextClassName(
+  status: CandidateWorkflowStatus,
+): string {
+  switch (status) {
+    case 'new':
+      return 'text-slate-600';
+    case 'review':
+      return 'text-[#1560BD]';
+    case 'invited':
+      return 'text-emerald-700';
+    case 'rejected':
+      return 'text-rose-700';
+  }
+}
