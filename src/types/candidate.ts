@@ -33,6 +33,13 @@ export interface CandidateFilters {
   city?: string;
 }
 
+export interface CandidateListQueryParams {
+  verdict?: CandidateVerdict;
+  search?: string;
+  sort?: CandidateSortField;
+  page: number;
+}
+
 export interface Candidate {
   id: string;
   name: string;
