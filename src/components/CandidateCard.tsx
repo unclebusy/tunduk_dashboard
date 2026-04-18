@@ -17,15 +17,15 @@ function CandidateCard({ candidate }: CandidateCardProps) {
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2">
+        <Link
+          to={`/candidates/${candidate.id}`}
+          className="block space-y-2 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+        >
           <div>
             <h3 className="text-base font-semibold text-slate-900">
-              <Link
-                to={`/candidates/${candidate.id}`}
-                className="transition-colors hover:text-slate-700"
-              >
+              <span className="transition-colors hover:text-slate-700">
                 {candidate.name}
-              </Link>
+              </span>
             </h3>
             <p className="text-sm text-slate-600">{candidate.pos_label}</p>
           </div>
@@ -48,15 +48,21 @@ function CandidateCard({ candidate }: CandidateCardProps) {
               <dd>{formatCreatedAt(candidate.createdAt)}</dd>
             </div>
           </dl>
-        </div>
+        </Link>
 
-        <div className="shrink-0 text-sm text-slate-500">
+        <div className="shrink-0 space-y-3 text-sm text-slate-500">
           <a
             href={`mailto:${candidate.email}`}
-            className="transition-colors hover:text-slate-900"
+            className="block transition-colors hover:text-slate-900"
           >
             {candidate.email}
           </a>
+          <Link
+            to={`/candidates/${candidate.id}`}
+            className="inline-flex rounded-lg border border-slate-200 px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
+          >
+            View details
+          </Link>
         </div>
       </div>
     </article>
