@@ -3,15 +3,19 @@ import type { Candidate } from '../types/candidate';
 import { getVerdictBadgeClassName } from './candidateDetailStyles';
 
 interface CandidateDetailHeaderProps {
+  backTo: string;
   candidate: Candidate;
 }
 
-function CandidateDetailHeader({ candidate }: CandidateDetailHeaderProps) {
+function CandidateDetailHeader({
+  backTo,
+  candidate,
+}: CandidateDetailHeaderProps) {
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="space-y-4">
         <Link
-          to="/candidates"
+          to={backTo}
           className="inline-flex text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
         >
           Back to candidates

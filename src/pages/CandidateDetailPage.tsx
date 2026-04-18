@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useLocation, useParams } from 'react-router';
 import CandidateDetailContacts from '../components/CandidateDetailContacts';
 import CandidateDetailEvaluation from '../components/CandidateDetailEvaluation';
 import CandidateDetailHeader from '../components/CandidateDetailHeader';
@@ -9,8 +9,10 @@ import type { Candidate } from '../types/candidate';
 
 function CandidateDetailPage() {
   const { candidateId } = useParams();
+  const { search } = useLocation();
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const backToCandidatesPath = `/candidates${search}`;
 
   useEffect(() => {
     let isMounted = true;
@@ -75,7 +77,7 @@ function CandidateDetailPage() {
             </p>
           </div>
           <Link
-            to="/candidates"
+            to={backToCandidatesPath}
             className="inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
           >
             Back to candidates
@@ -87,7 +89,7 @@ function CandidateDetailPage() {
 
   return (
     <div className="space-y-6">
-      <CandidateDetailHeader candidate={candidate} />
+      <CandidateDetailHeader backTo={backToCandidatesPath} candidate={candidate} />
       <CandidateDetailContacts candidate={candidate} />
       <CandidateDetailProfile candidate={candidate} />
       <CandidateDetailEvaluation candidate={candidate} />

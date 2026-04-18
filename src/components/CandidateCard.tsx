@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import type { Candidate } from '../types/candidate';
 
 interface CandidateCardProps {
@@ -14,11 +14,14 @@ function formatCreatedAt(value: string): string {
 }
 
 function CandidateCard({ candidate }: CandidateCardProps) {
+  const { search } = useLocation();
+  const candidateDetailPath = `/candidates/${candidate.id}${search}`;
+
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <Link
-          to={`/candidates/${candidate.id}`}
+          to={candidateDetailPath}
           className="block space-y-2 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
         >
           <div>
@@ -58,7 +61,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
             {candidate.email}
           </a>
           <Link
-            to={`/candidates/${candidate.id}`}
+            to={candidateDetailPath}
             className="inline-flex rounded-lg border border-slate-200 px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
           >
             View details
