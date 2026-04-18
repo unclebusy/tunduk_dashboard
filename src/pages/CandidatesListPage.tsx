@@ -170,11 +170,11 @@ function CandidatesListPage() {
       <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="min-w-0 space-y-1.5 xl:pb-0.5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+            <p className="text-[16px] font-semibold uppercase tracking-[0.08em] text-slate-400">
               Список кандидатов
             </p>
             <div className="flex flex-wrap items-baseline gap-x-2">
-              <p className="text-lg font-medium text-slate-500">
+              <p className="text-sm font-medium text-slate-400">
                 Кандидатов:
               </p>
               <p className="text-2xl font-semibold leading-none text-slate-900">
@@ -182,7 +182,7 @@ function CandidatesListPage() {
               </p>
             </div>
             <p className="text-sm text-slate-500">
-              Фильтров: {activeFiltersCount}
+              Выбрано фильтров: {activeFiltersCount}
             </p>
           </div>
 
