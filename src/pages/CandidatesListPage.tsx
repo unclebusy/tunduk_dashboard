@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import CandidateCard from '../components/CandidateCard';
+import { useDebounce } from '../hooks/useDebounce';
 import { getCandidates } from '../services/candidatesApi';
 import type { Candidate, CandidateVerdict } from '../types/candidate';
 import {
@@ -25,6 +26,10 @@ function CandidatesListPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   const queryParams = parseCandidateListQueryParams(searchParams);
+  const [searchInputValue, setSearchInputValue] = useState(
+    queryParams.search ?? '',
+  );
+  const debouncedSearchValue = useDebounce(searchInputValue, 300);
   const filteredCandidates = candidates.filter((candidate) => {
     const matchesVerdict = queryParams.verdict
       ? candidate.verdict === queryParams.verdict
@@ -57,6 +62,18 @@ function CandidatesListPage() {
       }),
     );
   }
+
+  useEffect(() => {
+    setSearchInputValue(queryParams.search ?? '');
+  }, [queryParams.search]);
+
+  useEffect(() => {
+    if (debouncedSearchValue === (queryParams.search ?? '')) {
+      return;
+    }
+
+    handleSearchChange(debouncedSearchValue);
+  }, [debouncedSearchValue, queryParams.search]);
 
   useEffect(() => {
     let isMounted = true;
@@ -155,8 +172,8 @@ function CandidatesListPage() {
               </span>
               <input
                 type="search"
-                value={queryParams.search ?? ''}
-                onChange={(event) => handleSearchChange(event.target.value)}
+                value={searchInputValue}
+                onChange={(event) => setSearchInputValue(event.target.value)}
                 placeholder="Enter full name"
                 className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
               />
