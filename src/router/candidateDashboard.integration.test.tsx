@@ -133,4 +133,19 @@ describe('Candidate Dashboard integration', () => {
     ).toBeTruthy();
     expect(screen.getByText(/показано 0 из 0 кандидатов\./i)).toBeTruthy();
   });
+
+  it('shows an error state when candidate loading fails', async () => {
+    vi.mocked(candidatesApi.getCandidates).mockRejectedValue(
+      new Error('Не удалось загрузить список кандидатов.'),
+    );
+
+    renderCandidateDashboard(['/candidates']);
+
+    expect(
+      await screen.findByText(/не удалось загрузить список кандидатов\./i),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: /повторить/i }),
+    ).toBeTruthy();
+  });
 });
