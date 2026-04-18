@@ -59,7 +59,7 @@ function CandidateDetailHeader({
               <dd>{getCandidateWorkflowStatusLabel(candidate.status)}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-900">Вердикт</dt>
+              <dt className="font-medium text-slate-900">Решение</dt>
               <dd>
                 <span
                   className={[

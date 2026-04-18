@@ -52,7 +52,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
         <dl className="grid gap-3 text-sm">
           <div className="space-y-1">
             <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
-              Вердикт
+              Решение
             </dt>
             <dd>
               <span

@@ -17,7 +17,7 @@ const verdictOptions: Array<{
   label: string;
   value?: CandidateVerdict;
 }> = [
-  { label: 'Все вердикты' },
+  { label: 'Все решения' },
   { label: 'Подходит', value: 'ПОДХОДИТ' },
   { label: 'Частично', value: 'ЧАСТИЧНО' },
   { label: 'Не подходит', value: 'НЕ СООТВЕТСТВУЕТ' },
@@ -202,7 +202,7 @@ function CandidatesListPage() {
 
             <label className="block">
               <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
-                Вердикт
+                Решение
               </span>
               <div className="relative">
                 <select
