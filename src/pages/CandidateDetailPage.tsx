@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
+import CandidateDetailContacts from '../components/CandidateDetailContacts';
+import CandidateDetailHeader from '../components/CandidateDetailHeader';
+import CandidateDetailOverview from '../components/CandidateDetailOverview';
 import { getCandidateById } from '../services/candidatesApi';
 import type { Candidate } from '../types/candidate';
 
@@ -82,51 +85,11 @@ function CandidateDetailPage() {
   }
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <Link
-            to="/candidates"
-            className="inline-flex text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
-          >
-            Back to candidates
-          </Link>
-          <h2 className="text-lg font-semibold text-slate-900">
-            {candidate.name}
-          </h2>
-          <p className="text-sm leading-6 text-slate-600">
-            {candidate.pos_label}
-          </p>
-        </div>
-
-        <dl className="grid gap-4 text-sm text-slate-600 sm:grid-cols-2">
-          <div>
-            <dt className="font-medium text-slate-900">Email</dt>
-            <dd>{candidate.email}</dd>
-          </div>
-          <div>
-            <dt className="font-medium text-slate-900">Phone</dt>
-            <dd>{candidate.phone}</dd>
-          </div>
-          <div>
-            <dt className="font-medium text-slate-900">City</dt>
-            <dd>{candidate.city}</dd>
-          </div>
-          <div>
-            <dt className="font-medium text-slate-900">Status</dt>
-            <dd className="capitalize">{candidate.status}</dd>
-          </div>
-          <div>
-            <dt className="font-medium text-slate-900">Verdict</dt>
-            <dd>{candidate.verdict}</dd>
-          </div>
-          <div>
-            <dt className="font-medium text-slate-900">Stack</dt>
-            <dd>{candidate.stack}</dd>
-          </div>
-        </dl>
-      </div>
-    </section>
+    <div className="space-y-6">
+      <CandidateDetailHeader candidate={candidate} />
+      <CandidateDetailContacts candidate={candidate} />
+      <CandidateDetailOverview candidate={candidate} />
+    </div>
   );
 }
 
