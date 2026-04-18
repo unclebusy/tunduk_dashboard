@@ -103,6 +103,14 @@ function CandidatesListPage() {
     queryParams.sort,
     queryParams.page > 1 ? String(queryParams.page) : undefined,
   ].filter(Boolean).length;
+  const visibleRangeStart =
+    totalVisibleCandidates > 0
+      ? (currentPage - 1) * CANDIDATES_PAGE_SIZE + 1
+      : 0;
+  const visibleRangeEnd =
+    totalVisibleCandidates > 0
+      ? visibleRangeStart + paginatedCandidates.length - 1
+      : 0;
 
   useEffect(() => {
     setSearchInputValue(queryParams.search ?? '');
@@ -309,27 +317,31 @@ function CandidatesListPage() {
       </section>
 
       {totalVisibleCandidates > CANDIDATES_PAGE_SIZE ? (
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <section className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-sm">
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-slate-600">
-              Страница {currentPage} из {totalPages}
+              Показано {visibleRangeStart}-{visibleRangeEnd} из {totalVisibleCandidates}
             </p>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center self-start rounded-lg border border-slate-200 bg-slate-50/60 p-1 sm:self-auto">
               <button
                 type="button"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="cursor-pointer rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:opacity-50"
+                className="cursor-pointer rounded-md border border-[#1560BD]/20 bg-white px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-white disabled:text-slate-300 disabled:opacity-100"
               >
                 Назад
               </button>
+
+              <span className="min-w-16 px-2.5 text-center text-sm font-medium text-slate-700">
+                {currentPage} / {totalPages}
+              </span>
 
               <button
                 type="button"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="cursor-pointer rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:opacity-50"
+                className="cursor-pointer rounded-md border border-[#1560BD]/20 bg-white px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-white disabled:text-slate-300 disabled:opacity-100"
               >
                 Далее
               </button>
