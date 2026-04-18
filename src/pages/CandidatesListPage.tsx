@@ -25,15 +25,34 @@ function CandidatesListPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   const queryParams = parseCandidateListQueryParams(searchParams);
-  const filteredCandidates = queryParams.verdict
-    ? candidates.filter(({ verdict }) => verdict === queryParams.verdict)
-    : candidates;
+  const filteredCandidates = candidates.filter((candidate) => {
+    const matchesVerdict = queryParams.verdict
+      ? candidate.verdict === queryParams.verdict
+      : true;
+    const matchesSearch = queryParams.search
+      ? candidate.name
+          .toLocaleLowerCase()
+          .includes(queryParams.search.toLocaleLowerCase())
+      : true;
+
+    return matchesVerdict && matchesSearch;
+  });
 
   function handleVerdictChange(nextVerdict?: CandidateVerdict) {
     setSearchParams(
       serializeCandidateListQueryParams({
         ...queryParams,
         verdict: nextVerdict,
+        page: 1,
+      }),
+    );
+  }
+
+  function handleSearchChange(nextSearch: string) {
+    setSearchParams(
+      serializeCandidateListQueryParams({
+        ...queryParams,
+        search: nextSearch,
         page: 1,
       }),
     );
@@ -129,28 +148,43 @@ function CandidatesListPage() {
             </p>
           </div>
 
-          <label className="block max-w-xs">
-            <span className="mb-2 block text-sm font-medium text-slate-900">
-              Verdict
-            </span>
-            <select
-              value={queryParams.verdict ?? ''}
-              onChange={(event) =>
-                handleVerdictChange(
-                  event.target.value
-                    ? (event.target.value as CandidateVerdict)
-                    : undefined,
-                )
-              }
-              className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
-            >
-              {verdictOptions.map((option) => (
-                <option key={option.value ?? 'all'} value={option.value ?? ''}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="grid gap-4 sm:grid-cols-2 lg:min-w-[28rem]">
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-slate-900">
+                Search by name
+              </span>
+              <input
+                type="search"
+                value={queryParams.search ?? ''}
+                onChange={(event) => handleSearchChange(event.target.value)}
+                placeholder="Enter full name"
+                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-slate-900">
+                Verdict
+              </span>
+              <select
+                value={queryParams.verdict ?? ''}
+                onChange={(event) =>
+                  handleVerdictChange(
+                    event.target.value
+                      ? (event.target.value as CandidateVerdict)
+                      : undefined,
+                  )
+                }
+                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
+              >
+                {verdictOptions.map((option) => (
+                  <option key={option.value ?? 'all'} value={option.value ?? ''}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
         </div>
       </section>
 
@@ -161,7 +195,7 @@ function CandidatesListPage() {
           ))
         ) : (
           <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-600 shadow-sm">
-            No candidates match the selected verdict.
+            No candidates match the current filters.
           </div>
         )}
       </section>
