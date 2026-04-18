@@ -21,12 +21,22 @@ function getStackItems(stack: string): string[] {
     .filter(Boolean);
 }
 
+function formatCandidateGrade(position: string): string {
+  return position
+    .split('-')
+    .map((part) =>
+      part.length > 0 ? part[0].toUpperCase() + part.slice(1) : part,
+    )
+    .join(' ');
+}
+
 function CandidateCard({ candidate }: CandidateCardProps) {
   const { search } = useLocation();
   const candidateDetailPath = `/candidate/${candidate.id}${search}`;
   const stackItems = getStackItems(candidate.stack);
   const visibleStackItems = stackItems.slice(0, 4);
   const hiddenStackCount = Math.max(0, stackItems.length - visibleStackItems.length);
+  const candidateGrade = formatCandidateGrade(candidate.position);
 
   return (
     <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
@@ -39,12 +49,15 @@ function CandidateCard({ candidate }: CandidateCardProps) {
             >
               {candidate.name}
             </Link>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-500">
-              <span>{candidate.city}</span>
-              <span className="text-slate-300" aria-hidden="true">
-                /
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+              <span className="inline-flex items-baseline gap-1.5 text-slate-500">
+                <span>Город:</span>
+                <span className="font-medium text-slate-700">{candidate.city}</span>
               </span>
-              <span>{candidate.position}</span>
+              <span className="inline-flex items-baseline gap-1.5 text-slate-500">
+                <span>Грейд:</span>
+                <span className="font-medium text-slate-700">{candidateGrade}</span>
+              </span>
             </div>
           </div>
         </div>
