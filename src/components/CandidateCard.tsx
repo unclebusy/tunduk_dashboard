@@ -1,17 +1,9 @@
 import { Link, useLocation } from 'react-router';
 import type { Candidate } from '../types/candidate';
-import { getCandidateWorkflowStatusLabel } from '../utils/candidateWorkflowStatus';
+import { getVerdictBadgeClassName } from './candidateDetailStyles';
 
 interface CandidateCardProps {
   candidate: Candidate;
-}
-
-function formatCreatedAt(value: string): string {
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(value));
 }
 
 function CandidateCard({ candidate }: CandidateCardProps) {
@@ -31,25 +23,30 @@ function CandidateCard({ candidate }: CandidateCardProps) {
                 {candidate.name}
               </span>
             </h3>
-            <p className="text-sm text-slate-600">{candidate.pos_label}</p>
+            <p className="text-sm text-slate-600">{candidate.city}</p>
           </div>
 
-          <dl className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+          <dl className="grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
             <div>
-              <dt className="font-medium text-slate-900">Город</dt>
-              <dd>{candidate.city}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-slate-900">Статус</dt>
-              <dd>{getCandidateWorkflowStatusLabel(candidate.status)}</dd>
+              <dt className="font-medium text-slate-900">Общий опыт</dt>
+              <dd>{candidate.total_exp}</dd>
             </div>
             <div>
               <dt className="font-medium text-slate-900">Вердикт</dt>
-              <dd>{candidate.verdict}</dd>
+              <dd>
+                <span
+                  className={[
+                    'inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold',
+                    getVerdictBadgeClassName(candidate.verdict),
+                  ].join(' ')}
+                >
+                  {candidate.verdict}
+                </span>
+              </dd>
             </div>
-            <div>
-              <dt className="font-medium text-slate-900">Добавлен</dt>
-              <dd>{formatCreatedAt(candidate.createdAt)}</dd>
+            <div className="sm:col-span-2">
+              <dt className="font-medium text-slate-900">Основной стек</dt>
+              <dd className="line-clamp-2">{candidate.stack}</dd>
             </div>
           </dl>
         </Link>
