@@ -18,6 +18,32 @@ const verdictOptions: Array<{
   { label: 'Частично', value: 'ЧАСТИЧНО' },
   { label: 'Не соответствует', value: 'НЕ СООТВЕТСТВУЕТ' },
 ];
+const PAGE_SIZE = 10;
+
+function sortCandidates(
+  candidates: Candidate[],
+  sortField: 'createdAt' | 'name' | 'verdict' | 'status' | undefined,
+): Candidate[] {
+  if (!sortField) {
+    return candidates;
+  }
+
+  return [...candidates].sort((leftCandidate, rightCandidate) => {
+    switch (sortField) {
+      case 'name':
+        return leftCandidate.name.localeCompare(rightCandidate.name);
+      case 'verdict':
+        return leftCandidate.verdict.localeCompare(rightCandidate.verdict);
+      case 'status':
+        return leftCandidate.status.localeCompare(rightCandidate.status);
+      case 'createdAt':
+        return (
+          new Date(rightCandidate.createdAt).getTime() -
+          new Date(leftCandidate.createdAt).getTime()
+        );
+    }
+  });
+}
 
 function CandidatesListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,25 +68,37 @@ function CandidatesListPage() {
 
     return matchesVerdict && matchesSearch;
   });
+  const sortedCandidates = sortCandidates(filteredCandidates, queryParams.sort);
+  const totalPages = Math.max(1, Math.ceil(sortedCandidates.length / PAGE_SIZE));
+  const currentPage = Math.min(queryParams.page, totalPages);
+  const paginatedCandidates = sortedCandidates.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
 
-  function handleVerdictChange(nextVerdict?: CandidateVerdict) {
+  function updateQueryParams(
+    nextQueryParams: Partial<typeof queryParams>,
+    replace = false,
+  ) {
     setSearchParams(
       serializeCandidateListQueryParams({
         ...queryParams,
-        verdict: nextVerdict,
-        page: 1,
+        ...nextQueryParams,
       }),
+      { replace },
     );
   }
 
+  function handleVerdictChange(nextVerdict?: CandidateVerdict) {
+    updateQueryParams({ verdict: nextVerdict, page: 1 });
+  }
+
   function handleSearchChange(nextSearch: string) {
-    setSearchParams(
-      serializeCandidateListQueryParams({
-        ...queryParams,
-        search: nextSearch,
-        page: 1,
-      }),
-    );
+    updateQueryParams({ search: nextSearch, page: 1 });
+  }
+
+  function handlePageChange(nextPage: number) {
+    updateQueryParams({ page: nextPage });
   }
 
   useEffect(() => {
@@ -74,6 +112,14 @@ function CandidatesListPage() {
 
     handleSearchChange(debouncedSearchValue);
   }, [debouncedSearchValue, queryParams.search]);
+
+  useEffect(() => {
+    if (queryParams.page === currentPage) {
+      return;
+    }
+
+    updateQueryParams({ page: currentPage }, true);
+  }, [currentPage, queryParams.page]);
 
   useEffect(() => {
     let isMounted = true;
@@ -160,8 +206,8 @@ function CandidatesListPage() {
               Candidates List
             </h2>
             <p className="text-sm leading-6 text-slate-600">
-              Showing {filteredCandidates.length} candidates from the mock data
-              source.
+              Showing {paginatedCandidates.length} of {sortedCandidates.length}{' '}
+              candidates from the mock data source.
             </p>
           </div>
 
@@ -206,8 +252,8 @@ function CandidatesListPage() {
       </section>
 
       <section className="space-y-4">
-        {filteredCandidates.length > 0 ? (
-          filteredCandidates.map((candidate) => (
+        {sortedCandidates.length > 0 ? (
+          paginatedCandidates.map((candidate) => (
             <CandidateCard key={candidate.id} candidate={candidate} />
           ))
         ) : (
@@ -216,6 +262,36 @@ function CandidatesListPage() {
           </div>
         )}
       </section>
+
+      {sortedCandidates.length > PAGE_SIZE ? (
+        <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-slate-600">
+              Page {currentPage} of {totalPages}
+            </p>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Previous
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }
