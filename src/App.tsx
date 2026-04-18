@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[--color-page] text-slate-900">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-8 lg:px-8">
-        <header className="mb-8 flex items-center justify-between border-b border-slate-200 pb-4">
+        <header className="mb-8 flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">
               Frontend Test
@@ -15,7 +15,7 @@ function App() {
             </h1>
           </div>
 
-          <nav className="flex items-center gap-2">
+          <nav className="flex items-center gap-2 self-start sm:self-auto">
             <NavLink
               to="/candidates"
               className={({ isActive }) =>

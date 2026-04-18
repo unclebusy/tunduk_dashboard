@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import type { Candidate, CandidateWorkflowStatus } from '../types/candidate';
 import { getVerdictBadgeClassName } from './candidateDetailStyles';
+import { getCandidateWorkflowStatusLabel } from '../utils/candidateWorkflowStatus';
 
 interface CandidateDetailHeaderProps {
   backTo: string;
@@ -13,10 +14,10 @@ const workflowStatusOptions: Array<{
   label: string;
   value: CandidateWorkflowStatus;
 }> = [
-  { label: 'Новый', value: 'new' },
-  { label: 'На рассмотрении', value: 'review' },
-  { label: 'Приглашён', value: 'invited' },
-  { label: 'Отклонён', value: 'rejected' },
+  { label: getCandidateWorkflowStatusLabel('new'), value: 'new' },
+  { label: getCandidateWorkflowStatusLabel('review'), value: 'review' },
+  { label: getCandidateWorkflowStatusLabel('invited'), value: 'invited' },
+  { label: getCandidateWorkflowStatusLabel('rejected'), value: 'rejected' },
 ];
 
 function CandidateDetailHeader({
@@ -52,7 +53,7 @@ function CandidateDetailHeader({
             </div>
             <div>
               <dt className="font-medium text-slate-900">Current status</dt>
-              <dd className="capitalize">{candidate.status}</dd>
+              <dd>{getCandidateWorkflowStatusLabel(candidate.status)}</dd>
             </div>
             <div>
               <dt className="font-medium text-slate-900">Verdict</dt>
@@ -70,7 +71,7 @@ function CandidateDetailHeader({
           </dl>
 
           <div>
-            <label className="block min-w-56">
+            <label className="block w-full lg:min-w-56">
               <span className="mb-2 block text-sm font-medium text-slate-900">
                 Workflow status
               </span>
@@ -91,7 +92,9 @@ function CandidateDetailHeader({
             </label>
 
             {isStatusUpdating ? (
-              <p className="mt-2 text-sm text-slate-500">Saving status...</p>
+              <p className="mt-2 text-sm text-slate-500" aria-live="polite">
+                Saving status...
+              </p>
             ) : null}
           </div>
         </div>

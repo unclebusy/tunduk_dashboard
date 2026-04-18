@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router';
 import type { Candidate } from '../types/candidate';
+import { getCandidateWorkflowStatusLabel } from '../utils/candidateWorkflowStatus';
 
 interface CandidateCardProps {
   candidate: Candidate;
@@ -40,7 +41,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
             </div>
             <div>
               <dt className="font-medium text-slate-900">Status</dt>
-              <dd className="capitalize">{candidate.status}</dd>
+              <dd>{getCandidateWorkflowStatusLabel(candidate.status)}</dd>
             </div>
             <div>
               <dt className="font-medium text-slate-900">Verdict</dt>

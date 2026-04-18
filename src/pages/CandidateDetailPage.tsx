@@ -65,7 +65,7 @@ function CandidateDetailPage() {
     void loadCandidateById(candidateId);
   }, [candidateId]);
 
-  if (isLoading) {
+  if (isLoading && !candidate) {
     return (
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="space-y-3">
@@ -114,6 +114,7 @@ function CandidateDetailPage() {
               ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
               : 'border-rose-200 bg-rose-50 text-rose-800',
           ].join(' ')}
+          aria-live="polite"
         >
           <p className="text-sm font-medium">{statusNotification.message}</p>
         </section>
