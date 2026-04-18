@@ -1,8 +1,14 @@
-# Candidate Dashboard
+# Tunduk Dashboard
 
-Frontend test assignment for reviewing and managing a mock list of candidates.
+Тестовое задание по фронтенду для просмотра и управления списком кандидатов
 
-## Stack
+## О проекте
+
+Проект реализует Candidate Dashboard для HR-специалиста
+
+В приложении можно просматривать список кандидатов, открывать детальную карточку, фильтровать и искать кандидатов, менять статус обработки и проверять ключевые пользовательские сценарии через тесты
+
+## Стек
 
 - React 18
 - TypeScript
@@ -13,39 +19,39 @@ Frontend test assignment for reviewing and managing a mock list of candidates.
 - Vitest + React Testing Library
 - ESLint
 
-## Run
+## Запуск
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Test
+## Тесты
 
 ```bash
 npm run test
 ```
 
-## Lint
+## Линтинг
 
 ```bash
 npm run lint
 ```
 
-## Build
+## Сборка
 
 ```bash
 npm run build
 ```
 
-## Notes
+## Ключевые решения
 
-- Candidate data comes from local mock JSON files and is exposed through a small mock API layer.
-- URL query params are the source of truth for list search, verdict filter, sorting, and pagination.
-- Zustand is used only for candidate data flow and status updates; transient UI state stays in page components.
-- Candidate workflow status updates use optimistic UI with rollback on failure.
+- Данные кандидатов берутся из локальных mock JSON файлов и отдаются через небольшой mock API слой
+- URL query params являются source of truth для поиска, фильтра по вердикту, сортировки и пагинации списка
+- Zustand используется только для потока данных кандидатов и обновления статусов, а локальное UI состояние остаётся на уровне страниц
+- Обновление статуса кандидата реализовано через optimistic UI с rollback при ошибке
 
-## Not done
+## Что не сделано
 
-- Large dataset optimization from the optional task is not implemented.
-- Lint currently passes with warnings related to hook dependency strictness and router export structure.
+- Оптимизация для большого датасета из дополнительного задания не реализована
+- `npm run lint` проходит с warnings по зависимостям в `useEffect` и export structure в роутере
