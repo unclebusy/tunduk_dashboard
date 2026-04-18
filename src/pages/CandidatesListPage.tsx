@@ -191,46 +191,82 @@ function CandidatesListPage() {
               <span className="mb-2 block text-sm font-medium text-slate-900">
                 Вердикт
               </span>
-              <select
-                value={queryParams.verdict ?? ''}
-                onChange={(event) =>
-                  handleVerdictChange(
-                    event.target.value
-                      ? (event.target.value as CandidateVerdict)
-                      : undefined,
-                  )
-                }
-                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
-              >
-                {verdictOptions.map((option) => (
-                  <option key={option.value ?? 'all'} value={option.value ?? ''}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={queryParams.verdict ?? ''}
+                  onChange={(event) =>
+                    handleVerdictChange(
+                      event.target.value
+                        ? (event.target.value as CandidateVerdict)
+                        : undefined,
+                    )
+                  }
+                  className="block w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 pr-10 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
+                >
+                  {verdictOptions.map((option) => (
+                    <option key={option.value ?? 'all'} value={option.value ?? ''}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    aria-hidden="true"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      d="M5 7.5L10 12.5L15 7.5"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
             </label>
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-slate-900">
                 Сортировка
               </span>
-              <select
-                value={queryParams.sort ?? ''}
-                onChange={(event) =>
-                  handleSortChange(
-                    event.target.value
-                      ? (event.target.value as CandidateSortField)
-                      : undefined,
-                  )
-                }
-                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
-              >
-                {sortOptions.map((option) => (
-                  <option key={option.value ?? 'default'} value={option.value ?? ''}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={queryParams.sort ?? ''}
+                  onChange={(event) =>
+                    handleSortChange(
+                      event.target.value
+                        ? (event.target.value as CandidateSortField)
+                        : undefined,
+                    )
+                  }
+                  className="block w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 pr-10 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
+                >
+                  {sortOptions.map((option) => (
+                    <option key={option.value ?? 'default'} value={option.value ?? ''}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    aria-hidden="true"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      d="M5 7.5L10 12.5L15 7.5"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
             </label>
 
             <div className="flex items-end">

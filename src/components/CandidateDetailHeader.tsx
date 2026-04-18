@@ -78,20 +78,38 @@ function CandidateDetailHeader({
               <span className="mb-2 block text-sm font-medium text-slate-900">
                 Статус воронки
               </span>
-              <select
-                value={candidate.status}
-                disabled={isStatusUpdating}
-                onChange={(event) =>
-                  onStatusChange(event.target.value as CandidateWorkflowStatus)
-                }
-                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD] disabled:cursor-not-allowed disabled:bg-slate-50"
-              >
-                {workflowStatusOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={candidate.status}
+                  disabled={isStatusUpdating}
+                  onChange={(event) =>
+                    onStatusChange(event.target.value as CandidateWorkflowStatus)
+                  }
+                  className="block w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 pr-10 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD] disabled:cursor-not-allowed disabled:bg-slate-50"
+                >
+                  {workflowStatusOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    aria-hidden="true"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      d="M5 7.5L10 12.5L15 7.5"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
             </label>
 
             {isStatusUpdating ? (
