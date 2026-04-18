@@ -7,6 +7,11 @@ import CandidateDetailProfile from '../components/CandidateDetailProfile';
 import { useCandidatesStore } from '../store/useCandidatesStore';
 import type { CandidateWorkflowStatus } from '../types/candidate';
 
+interface StatusNotification {
+  message: string;
+  type: 'error' | 'success';
+}
+
 function CandidateDetailPage() {
   const { candidateId } = useParams();
   const { search } = useLocation();
@@ -21,7 +26,8 @@ function CandidateDetailPage() {
   );
   const backToCandidatesPath = `/candidates${search}`;
   const [isStatusUpdating, setIsStatusUpdating] = useState(false);
-  const [statusError, setStatusError] = useState<string | null>(null);
+  const [statusNotification, setStatusNotification] =
+    useState<StatusNotification | null>(null);
 
   async function handleStatusChange(status: CandidateWorkflowStatus) {
     if (!candidate || candidate.status === status) {
@@ -29,16 +35,22 @@ function CandidateDetailPage() {
     }
 
     setIsStatusUpdating(true);
-    setStatusError(null);
+    setStatusNotification(null);
 
     try {
       await updateCandidateStatus(candidate.id, status);
+      setStatusNotification({
+        message: 'Candidate workflow status was updated successfully.',
+        type: 'success',
+      });
     } catch (error) {
-      setStatusError(
-        error instanceof Error
-          ? error.message
-          : 'Failed to update candidate status.',
-      );
+      setStatusNotification({
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Failed to update candidate status.',
+        type: 'error',
+      });
     } finally {
       setIsStatusUpdating(false);
     }
@@ -49,6 +61,7 @@ function CandidateDetailPage() {
       return;
     }
 
+    setStatusNotification(null);
     void loadCandidateById(candidateId);
   }, [candidateId]);
 
@@ -93,12 +106,24 @@ function CandidateDetailPage() {
 
   return (
     <div className="space-y-6">
+      {statusNotification ? (
+        <section
+          className={[
+            'rounded-2xl border p-4 shadow-sm',
+            statusNotification.type === 'success'
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+              : 'border-rose-200 bg-rose-50 text-rose-800',
+          ].join(' ')}
+        >
+          <p className="text-sm font-medium">{statusNotification.message}</p>
+        </section>
+      ) : null}
+
       <CandidateDetailHeader
         backTo={backToCandidatesPath}
         candidate={candidate}
         isStatusUpdating={isStatusUpdating}
         onStatusChange={handleStatusChange}
-        statusError={statusError}
       />
       <CandidateDetailContacts candidate={candidate} />
       <CandidateDetailProfile candidate={candidate} />

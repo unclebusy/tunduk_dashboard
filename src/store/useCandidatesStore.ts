@@ -41,6 +41,23 @@ function getErrorMessage(error: unknown, fallback: string): string {
   return error instanceof Error ? error.message : fallback;
 }
 
+function upsertCandidate(
+  candidates: Candidate[],
+  nextCandidate: Candidate,
+): Candidate[] {
+  const hasCandidate = candidates.some(
+    (candidate) => candidate.id === nextCandidate.id,
+  );
+
+  if (!hasCandidate) {
+    return candidates;
+  }
+
+  return candidates.map((candidate) =>
+    candidate.id === nextCandidate.id ? nextCandidate : candidate,
+  );
+}
+
 export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
   candidates: [],
   candidateDetails: {},
@@ -133,27 +150,39 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
     };
 
     set((currentState) => ({
-      candidates: currentState.candidates.map((candidate) =>
-        candidate.id === optimisticCandidate.id ? optimisticCandidate : candidate,
-      ),
+      candidates: upsertCandidate(currentState.candidates, optimisticCandidate),
       candidateDetails: {
         ...currentState.candidateDetails,
         [optimisticCandidate.id]: optimisticCandidate,
       },
     }));
 
-    const updatedCandidate = await updateCandidateStatus(candidateId, status, options);
+    try {
+      const updatedCandidate = await updateCandidateStatus(
+        candidateId,
+        status,
+        options,
+      );
 
-    set((state) => ({
-      candidates: state.candidates.map((candidate) =>
-        candidate.id === updatedCandidate.id ? updatedCandidate : candidate,
-      ),
-      candidateDetails: {
-        ...state.candidateDetails,
-        [updatedCandidate.id]: updatedCandidate,
-      },
-    }));
+      set((currentState) => ({
+        candidates: upsertCandidate(currentState.candidates, updatedCandidate),
+        candidateDetails: {
+          ...currentState.candidateDetails,
+          [updatedCandidate.id]: updatedCandidate,
+        },
+      }));
 
-    return updatedCandidate;
+      return updatedCandidate;
+    } catch (error) {
+      set((currentState) => ({
+        candidates: upsertCandidate(currentState.candidates, existingCandidate),
+        candidateDetails: {
+          ...currentState.candidateDetails,
+          [existingCandidate.id]: existingCandidate,
+        },
+      }));
+
+      throw error;
+    }
   },
 }));

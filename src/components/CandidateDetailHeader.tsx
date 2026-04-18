@@ -7,7 +7,6 @@ interface CandidateDetailHeaderProps {
   candidate: Candidate;
   isStatusUpdating: boolean;
   onStatusChange: (status: CandidateWorkflowStatus) => void;
-  statusError: string | null;
 }
 
 const workflowStatusOptions: Array<{
@@ -25,7 +24,6 @@ function CandidateDetailHeader({
   candidate,
   isStatusUpdating,
   onStatusChange,
-  statusError,
 }: CandidateDetailHeaderProps) {
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -91,10 +89,6 @@ function CandidateDetailHeader({
                 ))}
               </select>
             </label>
-
-            {statusError ? (
-              <p className="mt-2 text-sm text-rose-700">{statusError}</p>
-            ) : null}
 
             {isStatusUpdating ? (
               <p className="mt-2 text-sm text-slate-500">Saving status...</p>
