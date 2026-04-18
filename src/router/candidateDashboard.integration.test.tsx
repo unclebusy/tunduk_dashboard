@@ -4,6 +4,8 @@ import {
   createMemoryRouter,
   Navigate,
   RouterProvider,
+  useLocation,
+  useParams,
 } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../App';
@@ -32,6 +34,13 @@ vi.mock('../services/candidatesApi', () => ({
   }),
 }));
 
+function LegacyCandidateDetailRedirect() {
+  const { candidateId } = useParams();
+  const { search } = useLocation();
+
+  return <Navigate to={`/candidate/${candidateId ?? ''}${search}`} replace />;
+}
+
 function renderCandidateDashboard(initialEntries: string[]) {
   const router = createMemoryRouter(
     [
@@ -48,8 +57,12 @@ function renderCandidateDashboard(initialEntries: string[]) {
             element: <CandidatesListPage />,
           },
           {
-            path: 'candidates/:candidateId',
+            path: 'candidate/:candidateId',
             element: <CandidateDetailPage />,
+          },
+          {
+            path: 'candidates/:candidateId',
+            element: <LegacyCandidateDetailRedirect />,
           },
           {
             path: '*',
@@ -86,7 +99,7 @@ describe('Candidate Dashboard integration', () => {
 
     await user.click(candidateLink);
 
-    expect(router.state.location.pathname).toBe('/candidates/ivanov');
+    expect(router.state.location.pathname).toBe('/candidate/ivanov');
     expect(
       await screen.findByText(
         /Фронтенд-разработчик с опытом React 3\.5 года\./i,
@@ -98,7 +111,7 @@ describe('Candidate Dashboard integration', () => {
   });
 
   it('shows a not found state for an unknown candidate id', async () => {
-    renderCandidateDashboard(['/candidates/unknown-id']);
+    renderCandidateDashboard(['/candidate/unknown-id']);
 
     expect(
       await screen.findByRole('heading', { name: /кандидат не найден/i }),

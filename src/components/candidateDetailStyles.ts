@@ -3,6 +3,17 @@ import type {
   CandidateVerdict,
 } from '../types/candidate';
 
+export function getVerdictLabel(verdict: CandidateVerdict): string {
+  switch (verdict) {
+    case 'ПОДХОДИТ':
+      return 'Подходит';
+    case 'ЧАСТИЧНО':
+      return 'Частично';
+    case 'НЕ СООТВЕТСТВУЕТ':
+      return 'Не подходит';
+  }
+}
+
 export function getVerdictBadgeClassName(verdict: CandidateVerdict): string {
   switch (verdict) {
     case 'ПОДХОДИТ':

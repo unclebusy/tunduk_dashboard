@@ -1,6 +1,9 @@
 import { Link, useLocation } from 'react-router';
 import type { Candidate } from '../types/candidate';
-import { getVerdictBadgeClassName } from './candidateDetailStyles';
+import {
+  getVerdictBadgeClassName,
+  getVerdictLabel,
+} from './candidateDetailStyles';
 
 interface CandidateCardProps {
   candidate: Candidate;
@@ -8,7 +11,7 @@ interface CandidateCardProps {
 
 function CandidateCard({ candidate }: CandidateCardProps) {
   const { search } = useLocation();
-  const candidateDetailPath = `/candidates/${candidate.id}${search}`;
+  const candidateDetailPath = `/candidate/${candidate.id}${search}`;
 
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
@@ -40,7 +43,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
                     getVerdictBadgeClassName(candidate.verdict),
                   ].join(' ')}
                 >
-                  {candidate.verdict}
+                  {getVerdictLabel(candidate.verdict)}
                 </span>
               </dd>
             </div>

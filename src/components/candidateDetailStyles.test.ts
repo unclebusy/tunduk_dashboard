@@ -3,6 +3,7 @@ import {
   getCriterionBadgeClassName,
   getCriterionLabel,
   getVerdictBadgeClassName,
+  getVerdictLabel,
 } from './candidateDetailStyles';
 
 describe('candidateDetailStyles', () => {
@@ -19,5 +20,11 @@ describe('candidateDetailStyles', () => {
     expect(getCriterionBadgeClassName('ok')).toContain('emerald');
     expect(getCriterionBadgeClassName('partial')).toContain('amber');
     expect(getCriterionBadgeClassName('no')).toContain('rose');
+  });
+
+  it('maps verdicts to user-facing labels aligned with the task wording', () => {
+    expect(getVerdictLabel('ПОДХОДИТ')).toBe('Подходит');
+    expect(getVerdictLabel('ЧАСТИЧНО')).toBe('Частично');
+    expect(getVerdictLabel('НЕ СООТВЕТСТВУЕТ')).toBe('Не подходит');
   });
 });

@@ -20,7 +20,7 @@ const verdictOptions: Array<{
   { label: 'Все вердикты' },
   { label: 'Подходит', value: 'ПОДХОДИТ' },
   { label: 'Частично', value: 'ЧАСТИЧНО' },
-  { label: 'Не соответствует', value: 'НЕ СООТВЕТСТВУЕТ' },
+  { label: 'Не подходит', value: 'НЕ СООТВЕТСТВУЕТ' },
 ];
 
 const sortOptions: Array<{

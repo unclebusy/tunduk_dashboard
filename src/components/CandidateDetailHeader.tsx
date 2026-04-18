@@ -1,6 +1,9 @@
 import { Link } from 'react-router';
 import type { Candidate, CandidateWorkflowStatus } from '../types/candidate';
-import { getVerdictBadgeClassName } from './candidateDetailStyles';
+import {
+  getVerdictBadgeClassName,
+  getVerdictLabel,
+} from './candidateDetailStyles';
 import { getCandidateWorkflowStatusLabel } from '../utils/candidateWorkflowStatus';
 
 interface CandidateDetailHeaderProps {
@@ -64,7 +67,7 @@ function CandidateDetailHeader({
                     getVerdictBadgeClassName(candidate.verdict),
                   ].join(' ')}
                 >
-                  {candidate.verdict}
+                  {getVerdictLabel(candidate.verdict)}
                 </span>
               </dd>
             </div>
