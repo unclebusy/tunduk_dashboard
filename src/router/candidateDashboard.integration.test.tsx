@@ -12,6 +12,7 @@ import App from '../App';
 import CandidateDetailPage from '../pages/CandidateDetailPage';
 import CandidatesListPage from '../pages/CandidatesListPage';
 import NotFoundPage from '../pages/NotFoundPage';
+import * as candidatesApi from '../services/candidatesApi';
 import { mockCandidates } from '../services/candidates';
 import { useCandidatesStore } from '../store/useCandidatesStore';
 
@@ -84,6 +85,7 @@ function renderCandidateDashboard(initialEntries: string[]) {
 describe('Candidate Dashboard integration', () => {
   beforeEach(() => {
     useCandidatesStore.setState(useCandidatesStore.getInitialState(), true);
+    vi.mocked(candidatesApi.getCandidates).mockResolvedValue(mockCandidates);
   });
 
   afterEach(() => {
@@ -119,5 +121,16 @@ describe('Candidate Dashboard integration', () => {
     expect(
       screen.getByRole('link', { name: /назад к списку/i }),
     ).toBeTruthy();
+  });
+
+  it('shows an empty state when no candidates are returned', async () => {
+    vi.mocked(candidatesApi.getCandidates).mockResolvedValue([]);
+
+    renderCandidateDashboard(['/candidates']);
+
+    expect(
+      await screen.findByText(/по текущим фильтрам кандидаты не найдены\./i),
+    ).toBeTruthy();
+    expect(screen.getByText(/показано 0 из 0 кандидатов\./i)).toBeTruthy();
   });
 });
