@@ -44,3 +44,8 @@ npm run build
 - URL query params are the source of truth for list search, verdict filter, sorting, and pagination.
 - Zustand is used only for candidate data flow and status updates; transient UI state stays in page components.
 - Candidate workflow status updates use optimistic UI with rollback on failure.
+
+## Not done
+
+- Large dataset optimization from the optional task is not implemented.
+- Lint currently passes with warnings related to hook dependency strictness and router export structure.

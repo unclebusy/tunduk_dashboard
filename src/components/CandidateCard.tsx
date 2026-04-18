@@ -54,13 +54,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
           </dl>
         </Link>
 
-        <div className="shrink-0 space-y-3 text-sm text-slate-500">
-          <a
-            href={`mailto:${candidate.email}`}
-            className="block transition-colors hover:text-slate-900"
-          >
-            {candidate.email}
-          </a>
+        <div className="shrink-0">
           <Link
             to={candidateDetailPath}
             className="inline-flex rounded-lg border border-slate-200 px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
