@@ -7,12 +7,15 @@ function App() {
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-8 lg:px-8">
         <header className="mb-8 flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">
-              Тестовое задание
-            </p>
             <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
-              Tunduk Dashboard
+              Тундук
             </h1>
+            <p className="text-lg font-medium tracking-[0.4em] text-slate-500">
+              Панель управления кандидатами
+            </p>
+            <p className="text-sm font-medium tracking-[0.04em] text-slate-400">
+              создал Unclebusy
+            </p>
           </div>
 
           <nav className="flex items-center gap-2 self-start sm:self-auto">
