@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import CandidateDetailContacts from '../components/CandidateDetailContacts';
+import CandidateDetailEvaluation from '../components/CandidateDetailEvaluation';
 import CandidateDetailHeader from '../components/CandidateDetailHeader';
-import CandidateDetailOverview from '../components/CandidateDetailOverview';
+import CandidateDetailProfile from '../components/CandidateDetailProfile';
 import { getCandidateById } from '../services/candidatesApi';
 import type { Candidate } from '../types/candidate';
 
@@ -88,7 +89,8 @@ function CandidateDetailPage() {
     <div className="space-y-6">
       <CandidateDetailHeader candidate={candidate} />
       <CandidateDetailContacts candidate={candidate} />
-      <CandidateDetailOverview candidate={candidate} />
+      <CandidateDetailProfile candidate={candidate} />
+      <CandidateDetailEvaluation candidate={candidate} />
     </div>
   );
 }

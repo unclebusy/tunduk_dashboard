@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import type { Candidate } from '../types/candidate';
+import { getVerdictBadgeClassName } from './candidateDetailStyles';
 
 interface CandidateDetailHeaderProps {
   candidate: Candidate;
@@ -36,7 +37,16 @@ function CandidateDetailHeader({ candidate }: CandidateDetailHeaderProps) {
           </div>
           <div>
             <dt className="font-medium text-slate-900">Verdict</dt>
-            <dd>{candidate.verdict}</dd>
+            <dd>
+              <span
+                className={[
+                  'inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold',
+                  getVerdictBadgeClassName(candidate.verdict),
+                ].join(' ')}
+              >
+                {candidate.verdict}
+              </span>
+            </dd>
           </div>
         </dl>
       </div>
