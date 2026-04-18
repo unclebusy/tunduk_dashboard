@@ -131,7 +131,8 @@ describe('Candidate Dashboard integration', () => {
     expect(
       await screen.findByText(/по текущим фильтрам кандидаты не найдены/i),
     ).toBeTruthy();
-    expect(screen.getByText(/показано 0 из 0 кандидатов/i)).toBeTruthy();
+    expect(screen.getByText(/^0 кандидатов$/i)).toBeTruthy();
+    expect(screen.getByText(/на текущей странице показано 0/i)).toBeTruthy();
   });
 
   it('shows an error state when candidate loading fails', async () => {

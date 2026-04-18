@@ -97,6 +97,12 @@ function CandidatesListPage() {
     Boolean(queryParams.verdict) ||
     Boolean(queryParams.sort) ||
     queryParams.page > 1;
+  const activeFiltersCount = [
+    queryParams.search,
+    queryParams.verdict,
+    queryParams.sort,
+    queryParams.page > 1 ? String(queryParams.page) : undefined,
+  ].filter(Boolean).length;
 
   useEffect(() => {
     setSearchInputValue(queryParams.search ?? '');
@@ -160,22 +166,34 @@ function CandidatesListPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-slate-900">
+    <div className="space-y-4">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div className="min-w-0 space-y-1">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
               Список кандидатов
-            </h2>
-            <p className="text-sm leading-6 text-slate-600">
-              Показано {paginatedCandidates.length} из {totalVisibleCandidates}{' '}
-              кандидатов
+            </p>
+            <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
+              <p className="text-xl font-semibold text-slate-900">
+                {totalVisibleCandidates} кандидатов
+              </p>
+              <p className="text-sm text-slate-500">
+                Страница {currentPage} из {totalPages}
+              </p>
+              {hasActiveFilters ? (
+                <p className="text-sm font-medium text-slate-500">
+                  Активных фильтров: {activeFiltersCount}
+                </p>
+              ) : null}
+            </div>
+            <p className="text-sm text-slate-500">
+              На текущей странице показано {paginatedCandidates.length}
             </p>
           </div>
 
-          <div className="grid gap-4 lg:min-w-[36rem] lg:grid-cols-[minmax(0,1fr)_12rem_12rem_auto]">
+          <div className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3 lg:min-w-[42rem] lg:grid-cols-[minmax(0,1fr)_11rem_11rem_auto]">
             <label className="block min-w-0">
-              <span className="mb-2 block text-sm font-medium text-slate-900">
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
                 Поиск по ФИО
               </span>
               <input
@@ -183,12 +201,12 @@ function CandidatesListPage() {
                 value={searchInputValue}
                 onChange={(event) => setSearchInputValue(event.target.value)}
                 placeholder="Введите полное имя"
-                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
+                className="block h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
               />
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-900">
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
                 Вердикт
               </span>
               <div className="relative">
@@ -201,7 +219,7 @@ function CandidatesListPage() {
                         : undefined,
                     )
                   }
-                  className="block w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 pr-10 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
+                  className="block h-10 w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-10 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
                 >
                   {verdictOptions.map((option) => (
                     <option key={option.value ?? 'all'} value={option.value ?? ''}>
@@ -229,7 +247,7 @@ function CandidatesListPage() {
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-900">
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
                 Сортировка
               </span>
               <div className="relative">
@@ -242,7 +260,7 @@ function CandidatesListPage() {
                         : undefined,
                     )
                   }
-                  className="block w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white px-3 py-2 pr-10 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
+                  className="block h-10 w-full cursor-pointer appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-10 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
                 >
                   {sortOptions.map((option) => (
                     <option key={option.value ?? 'default'} value={option.value ?? ''}>
@@ -269,12 +287,12 @@ function CandidatesListPage() {
               </div>
             </label>
 
-            <div className="flex items-end">
+            <div className="flex items-end lg:justify-end">
               <button
                 type="button"
                 onClick={handleResetFilters}
                 disabled={!hasActiveFilters}
-                className="inline-flex cursor-pointer rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex h-10 cursor-pointer items-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Сбросить
               </button>
@@ -283,20 +301,20 @@ function CandidatesListPage() {
         </div>
       </section>
 
-      <section className="space-y-4">
+      <section className="space-y-3">
         {totalVisibleCandidates > 0 ? (
           paginatedCandidates.map((candidate) => (
             <CandidateCard key={candidate.id} candidate={candidate} />
           ))
         ) : (
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-600 shadow-sm">
+          <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-600 shadow-sm">
             По текущим фильтрам кандидаты не найдены
           </div>
         )}
       </section>
 
       {totalVisibleCandidates > CANDIDATES_PAGE_SIZE ? (
-        <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-slate-600">
               Страница {currentPage} из {totalPages}

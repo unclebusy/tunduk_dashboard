@@ -5,60 +5,118 @@ import {
   getVerdictBadgeClassName,
   getVerdictLabel,
 } from './candidateDetailStyles';
+import {
+  getCandidateWorkflowStatusClassName,
+  getCandidateWorkflowStatusLabel,
+} from '../utils/candidateWorkflowStatus';
 
 interface CandidateCardProps {
   candidate: Candidate;
 }
 
+function getStackItems(stack: string): string[] {
+  return stack
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function CandidateCard({ candidate }: CandidateCardProps) {
   const { search } = useLocation();
   const candidateDetailPath = `/candidate/${candidate.id}${search}`;
+  const stackItems = getStackItems(candidate.stack);
+  const visibleStackItems = stackItems.slice(0, 4);
+  const hiddenStackCount = Math.max(0, stackItems.length - visibleStackItems.length);
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <Link
-          to={candidateDetailPath}
-          className="block cursor-pointer space-y-2 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
-        >
-          <div>
-            <h3 className="text-base font-semibold text-slate-900">
-              <span className="transition-colors hover:text-slate-700">
-                {candidate.name}
+    <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_14rem_minmax(0,1fr)_auto] lg:items-start">
+        <div className="min-w-0 space-y-2">
+          <div className="space-y-1">
+            <Link
+              to={candidateDetailPath}
+              className="inline-flex cursor-pointer rounded-md text-base font-semibold text-slate-900 transition-colors hover:text-[#1560BD] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+            >
+              {candidate.name}
+            </Link>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-500">
+              <span>{candidate.city}</span>
+              <span className="text-slate-300" aria-hidden="true">
+                /
               </span>
-            </h3>
-            <p className="text-sm text-slate-600">{candidate.city}</p>
+              <span>{candidate.position}</span>
+            </div>
+          </div>
+        </div>
+
+        <dl className="grid gap-3 text-sm">
+          <div className="space-y-1">
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+              Вердикт
+            </dt>
+            <dd>
+              <span
+                className={[
+                  'inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold',
+                  getVerdictBadgeClassName(candidate.verdict),
+                ].join(' ')}
+              >
+                {getVerdictLabel(candidate.verdict)}
+              </span>
+            </dd>
           </div>
 
-          <dl className="grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
-            <div>
-              <dt className="font-medium text-slate-900">Общий опыт</dt>
-              <dd>{candidate.total_exp}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-slate-900">Вердикт</dt>
-              <dd>
-                <span
-                  className={[
-                    'inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold',
-                    getVerdictBadgeClassName(candidate.verdict),
-                  ].join(' ')}
-                >
-                  {getVerdictLabel(candidate.verdict)}
-                </span>
-              </dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="font-medium text-slate-900">Основной стек</dt>
-              <dd className="line-clamp-2">{candidate.stack}</dd>
-            </div>
-          </dl>
-        </Link>
+          <div className="space-y-1">
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+              Статус
+            </dt>
+            <dd>
+              <span
+                className={[
+                  'inline-flex rounded-full border px-2.5 py-1 text-xs font-medium',
+                  getCandidateWorkflowStatusClassName(candidate.status),
+                ].join(' ')}
+              >
+                {getCandidateWorkflowStatusLabel(candidate.status)}
+              </span>
+            </dd>
+          </div>
+        </dl>
 
-        <div className="shrink-0">
+        <dl className="grid gap-3 text-sm">
+          <div className="space-y-1">
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+              Общий опыт
+            </dt>
+            <dd className="font-medium text-slate-900">{candidate.total_exp}</dd>
+          </div>
+
+          <div className="space-y-1">
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+              Основной стек
+            </dt>
+            <dd className="flex flex-wrap gap-1.5">
+              {visibleStackItems.map((stackItem) => (
+                <span
+                  key={stackItem}
+                  className="inline-flex rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600"
+                >
+                  {stackItem}
+                </span>
+              ))}
+              {hiddenStackCount > 0 ? (
+                <span className="inline-flex rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-500">
+                  +{hiddenStackCount}
+                </span>
+              ) : null}
+            </dd>
+          </div>
+        </dl>
+
+        <div className="flex items-start lg:justify-end">
           <Link
             to={candidateDetailPath}
-            className="inline-flex cursor-pointer rounded-lg border border-[#1560BD]/20 px-3 py-2 font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92]"
+            className="inline-flex cursor-pointer rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92]"
           >
             Подробнее
           </Link>
