@@ -135,7 +135,7 @@ function CandidatesListPage() {
           <button
             type="button"
             onClick={() => setReloadKey((currentValue) => currentValue + 1)}
-            className="inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+            className="inline-flex rounded-lg bg-[#1560BD] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0f4a92]"
           >
             Повторить
           </button>
@@ -168,7 +168,7 @@ function CandidatesListPage() {
                 value={searchInputValue}
                 onChange={(event) => setSearchInputValue(event.target.value)}
                 placeholder="Введите полное имя"
-                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
+                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
               />
             </label>
 
@@ -185,7 +185,7 @@ function CandidatesListPage() {
                       : undefined,
                   )
                 }
-                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
+                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
               >
                 {verdictOptions.map((option) => (
                   <option key={option.value ?? 'all'} value={option.value ?? ''}>
@@ -208,7 +208,7 @@ function CandidatesListPage() {
                       : undefined,
                   )
                 }
-                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
+                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD]"
               >
                 {sortOptions.map((option) => (
                   <option key={option.value ?? 'default'} value={option.value ?? ''}>
@@ -245,7 +245,7 @@ function CandidatesListPage() {
                 type="button"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Назад
               </button>
@@ -254,7 +254,7 @@ function CandidatesListPage() {
                 type="button"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Далее
               </button>

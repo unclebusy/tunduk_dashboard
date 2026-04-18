@@ -34,7 +34,7 @@ function CandidateDetailHeader({
       <div className="space-y-4">
         <Link
           to={backTo}
-          className="inline-flex text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
+          className="inline-flex text-sm font-medium text-[#1560BD] transition-colors hover:text-[#0f4a92]"
         >
           Назад к списку
         </Link>
@@ -84,7 +84,7 @@ function CandidateDetailHeader({
                 onChange={(event) =>
                   onStatusChange(event.target.value as CandidateWorkflowStatus)
                 }
-                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400 disabled:cursor-not-allowed disabled:bg-slate-50"
+                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-[#1560BD] disabled:cursor-not-allowed disabled:bg-slate-50"
               >
                 {workflowStatusOptions.map((option) => (
                   <option key={option.value} value={option.value}>

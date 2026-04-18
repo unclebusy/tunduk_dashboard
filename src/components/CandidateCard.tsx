@@ -58,7 +58,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
         <div className="shrink-0">
           <Link
             to={candidateDetailPath}
-            className="inline-flex rounded-lg border border-slate-200 px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
+            className="inline-flex rounded-lg border border-[#1560BD]/20 px-3 py-2 font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92]"
           >
             Подробнее
           </Link>

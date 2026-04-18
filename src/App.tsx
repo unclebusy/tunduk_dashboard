@@ -1,8 +1,17 @@
 import './styles.css';
-import { NavLink, Outlet } from 'react-router';
+import { Link, Outlet, useLocation } from 'react-router';
 import logo from './assets/logo.svg';
 
 function App() {
+  const { pathname, search } = useLocation();
+  const isCandidateDetailPage = pathname.startsWith('/candidate/');
+  const isCandidatesSectionActive =
+    pathname === '/candidates' || isCandidateDetailPage;
+  const candidatesLink = {
+    pathname: '/candidates',
+    search,
+  };
+
   return (
     <div className="min-h-screen bg-[--color-page] text-slate-900">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-8 lg:px-8">
@@ -27,19 +36,17 @@ function App() {
           </div>
 
           <nav className="flex items-center gap-2 self-start sm:self-auto">
-            <NavLink
-              to="/candidates"
-              className={({ isActive }) =>
-                [
-                  'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  isActive
-                    ? 'bg-slate-900 text-white'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
-                ].join(' ')
-              }
+            <Link
+              to={candidatesLink}
+              className={[
+                'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                isCandidatesSectionActive
+                  ? 'bg-[#1560BD] text-white'
+                  : 'text-slate-600 hover:bg-[#1560BD]/10 hover:text-[#1560BD]',
+              ].join(' ')}
             >
-              Кандидаты
-            </NavLink>
+              {isCandidateDetailPage ? '← Кандидаты' : 'Кандидаты'}
+            </Link>
           </nav>
         </header>
 
