@@ -118,11 +118,31 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
   },
 
   async updateCandidateStatus(candidateId, status, options) {
-    const updatedCandidate = await updateCandidateStatus(
-      candidateId,
+    const state = get();
+    const existingCandidate =
+      state.candidateDetails[candidateId] ??
+      state.candidates.find((candidate) => candidate.id === candidateId);
+
+    if (!existingCandidate) {
+      throw new Error(`Candidate not found: ${candidateId}`);
+    }
+
+    const optimisticCandidate: Candidate = {
+      ...existingCandidate,
       status,
-      options,
-    );
+    };
+
+    set((currentState) => ({
+      candidates: currentState.candidates.map((candidate) =>
+        candidate.id === optimisticCandidate.id ? optimisticCandidate : candidate,
+      ),
+      candidateDetails: {
+        ...currentState.candidateDetails,
+        [optimisticCandidate.id]: optimisticCandidate,
+      },
+    }));
+
+    const updatedCandidate = await updateCandidateStatus(candidateId, status, options);
 
     set((state) => ({
       candidates: state.candidates.map((candidate) =>
