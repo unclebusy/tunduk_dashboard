@@ -15,6 +15,7 @@ const candidateVerdicts: CandidateVerdict[] = [
 const candidateSortFields: CandidateSortField[] = [
   'createdAt',
   'name',
+  'totalExp',
   'verdict',
   'status',
 ];

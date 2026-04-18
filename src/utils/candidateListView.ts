@@ -9,6 +9,13 @@ export interface CandidateListViewData {
   totalVisibleCandidates: number;
 }
 
+function parseTotalExperience(value: string): number {
+  const normalizedValue = value.replace(',', '.');
+  const parsedValue = Number.parseFloat(normalizedValue.replace(/[^\d.]/g, ''));
+
+  return Number.isNaN(parsedValue) ? 0 : parsedValue;
+}
+
 export function sortCandidates(
   candidates: Candidate[],
   sortField: CandidateListQueryParams['sort'],
@@ -21,6 +28,11 @@ export function sortCandidates(
     switch (sortField) {
       case 'name':
         return leftCandidate.name.localeCompare(rightCandidate.name);
+      case 'totalExp':
+        return (
+          parseTotalExperience(rightCandidate.total_exp) -
+          parseTotalExperience(leftCandidate.total_exp)
+        );
       case 'verdict':
         return leftCandidate.verdict.localeCompare(rightCandidate.verdict);
       case 'status':

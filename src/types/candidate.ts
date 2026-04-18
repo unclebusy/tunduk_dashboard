@@ -9,6 +9,7 @@ export type CandidateWorkflowStatus =
 export type CandidateSortField =
   | 'createdAt'
   | 'name'
+  | 'totalExp'
   | 'verdict'
   | 'status';
 

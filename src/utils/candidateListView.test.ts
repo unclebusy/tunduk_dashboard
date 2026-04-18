@@ -45,4 +45,19 @@ describe('candidateListView', () => {
     expect(viewData.paginatedCandidates[0]?.id).toBe('beishenalieva');
     expect(viewData.paginatedCandidates[1]?.id).toBe('zholboshev');
   });
+
+  it('sorts by total experience descending before pagination', () => {
+    const viewData = getCandidateListViewData(mockCandidates, {
+      page: 1,
+      search: undefined,
+      sort: 'totalExp',
+      verdict: undefined,
+    });
+
+    expect(viewData.paginatedCandidates.slice(0, 3).map(({ total_exp }) => total_exp)).toEqual([
+      '~7.5 г.',
+      '~7.5 г.',
+      '~7.5 г.',
+    ]);
+  });
 });

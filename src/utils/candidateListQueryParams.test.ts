@@ -51,4 +51,10 @@ describe('candidateListQueryParams', () => {
 
     expect(searchParams.toString()).toBe('page=2');
   });
+
+  it('supports total experience as a sort field', () => {
+    const parsedParams = parseCandidateListQueryParams('sort=totalExp');
+
+    expect(parsedParams.sort).toBe('totalExp');
+  });
 });

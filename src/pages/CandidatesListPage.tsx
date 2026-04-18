@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import CandidateCard from '../components/CandidateCard';
 import { useDebounce } from '../hooks/useDebounce';
-import type { CandidateVerdict } from '../types/candidate';
+import type { CandidateSortField, CandidateVerdict } from '../types/candidate';
 import { useCandidatesStore } from '../store/useCandidatesStore';
 import {
   getCandidateListViewData,
@@ -21,6 +21,16 @@ const verdictOptions: Array<{
   { label: 'Подходит', value: 'ПОДХОДИТ' },
   { label: 'Частично', value: 'ЧАСТИЧНО' },
   { label: 'Не соответствует', value: 'НЕ СООТВЕТСТВУЕТ' },
+];
+
+const sortOptions: Array<{
+  label: string;
+  value?: CandidateSortField;
+}> = [
+  { label: 'По умолчанию' },
+  { label: 'По имени', value: 'name' },
+  { label: 'По опыту', value: 'totalExp' },
+  { label: 'По дате добавления', value: 'createdAt' },
 ];
 
 function CandidatesListPage() {
@@ -57,6 +67,10 @@ function CandidatesListPage() {
 
   function handleSearchChange(nextSearch: string) {
     updateQueryParams({ search: nextSearch, page: 1 });
+  }
+
+  function handleSortChange(nextSort?: CandidateSortField) {
+    updateQueryParams({ sort: nextSort, page: 1 });
   }
 
   function handlePageChange(nextPage: number) {
@@ -138,7 +152,7 @@ function CandidatesListPage() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:min-w-[28rem]">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 lg:min-w-[28rem]">
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-slate-900">
                 Поиск по ФИО
@@ -169,6 +183,29 @@ function CandidatesListPage() {
               >
                 {verdictOptions.map((option) => (
                   <option key={option.value ?? 'all'} value={option.value ?? ''}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-slate-900">
+                Сортировка
+              </span>
+              <select
+                value={queryParams.sort ?? ''}
+                onChange={(event) =>
+                  handleSortChange(
+                    event.target.value
+                      ? (event.target.value as CandidateSortField)
+                      : undefined,
+                  )
+                }
+                className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
+              >
+                {sortOptions.map((option) => (
+                  <option key={option.value ?? 'default'} value={option.value ?? ''}>
                     {option.label}
                   </option>
                 ))}
