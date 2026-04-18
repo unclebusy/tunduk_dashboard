@@ -13,7 +13,7 @@ function CandidateDetailContacts({
         <div>
           <h3 className="text-base font-semibold text-slate-900">Контакты</h3>
           <p className="mt-1 text-sm text-slate-600">
-            Основные контактные данные кандидата.
+            Основные контактные данные кандидата
           </p>
         </div>
 

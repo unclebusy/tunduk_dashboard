@@ -20,7 +20,7 @@ function CandidateDetailEvaluation({
               Критерии оценки
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              Оценка кандидата по ключевым критериям.
+              Оценка кандидата по ключевым критериям
             </p>
           </div>
 
@@ -56,7 +56,7 @@ function CandidateDetailEvaluation({
               Вопросы на интервью
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              Вопросы для следующего этапа общения с кандидатом.
+              Вопросы для следующего этапа общения с кандидатом
             </p>
           </div>
 

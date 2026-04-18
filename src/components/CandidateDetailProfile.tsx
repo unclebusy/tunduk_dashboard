@@ -12,7 +12,7 @@ function CandidateDetailProfile({ candidate }: CandidateDetailProfileProps) {
           <div>
             <h3 className="text-base font-semibold text-slate-900">Резюме</h3>
             <p className="mt-1 text-sm text-slate-600">
-              Краткое описание кандидата на основе профиля.
+              Краткое описание кандидата на основе профиля
             </p>
           </div>
 
@@ -25,7 +25,7 @@ function CandidateDetailProfile({ candidate }: CandidateDetailProfileProps) {
           <div>
             <h3 className="text-base font-semibold text-slate-900">Стек</h3>
             <p className="mt-1 text-sm text-slate-600">
-              Основные технологии и инструменты из профиля кандидата.
+              Основные технологии и инструменты из профиля кандидата
             </p>
           </div>
 
@@ -40,7 +40,7 @@ function CandidateDetailProfile({ candidate }: CandidateDetailProfileProps) {
               Опыт работы
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              Профессиональный опыт и общий стаж кандидата.
+              Профессиональный опыт и общий стаж кандидата
             </p>
           </div>
 
@@ -79,7 +79,7 @@ function CandidateDetailProfile({ candidate }: CandidateDetailProfileProps) {
               Образование
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              Данные об образовании из профиля кандидата.
+              Данные об образовании из профиля кандидата
             </p>
           </div>
 

@@ -154,7 +154,7 @@ function CandidatesListPage() {
             </h2>
             <p className="text-sm leading-6 text-slate-600">
               Показано {paginatedCandidates.length} из {totalVisibleCandidates}{' '}
-              кандидатов.
+              кандидатов
             </p>
           </div>
 
@@ -228,7 +228,7 @@ function CandidatesListPage() {
           ))
         ) : (
           <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-600 shadow-sm">
-            По текущим фильтрам кандидаты не найдены.
+            По текущим фильтрам кандидаты не найдены
           </div>
         )}
       </section>

@@ -92,7 +92,7 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
     } catch (error) {
       set({
         isCandidatesLoading: false,
-        candidatesError: getErrorMessage(error, 'Failed to load candidates.'),
+        candidatesError: getErrorMessage(error, 'Failed to load candidates'),
       });
     }
   },
@@ -126,7 +126,7 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
         isCandidateDetailLoading: false,
         candidateDetailError: getErrorMessage(
           error,
-          'Failed to load candidate details.',
+          'Failed to load candidate details',
         ),
       });
 

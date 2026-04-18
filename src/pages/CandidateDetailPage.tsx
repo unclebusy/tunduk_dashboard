@@ -40,7 +40,7 @@ function CandidateDetailPage() {
     try {
       await updateCandidateStatus(candidate.id, status);
       setStatusNotification({
-        message: 'Статус кандидата успешно обновлён.',
+        message: 'Статус кандидата успешно обновлён',
         type: 'success',
       });
     } catch (error) {
@@ -48,7 +48,7 @@ function CandidateDetailPage() {
         message:
           error instanceof Error
             ? error.message
-            : 'Не удалось обновить статус кандидата.',
+            : 'Не удалось обновить статус кандидата',
         type: 'error',
       });
     } finally {
@@ -90,7 +90,7 @@ function CandidateDetailPage() {
             </h2>
             <p className="text-sm leading-6 text-slate-600">
               {detailError ??
-                `Кандидат с ID ${candidateId ?? 'unknown'} не найден.`}
+                `Кандидат с ID ${candidateId ?? 'unknown'} не найден`}
             </p>
           </div>
           <Link

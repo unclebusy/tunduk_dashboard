@@ -9,7 +9,7 @@ function NotFoundPage() {
             Страница не найдена
           </h2>
           <p className="text-sm leading-6 text-slate-600">
-            Такой страницы нет в текущем приложении.
+            Такой страницы нет в текущем приложении
           </p>
         </div>
 

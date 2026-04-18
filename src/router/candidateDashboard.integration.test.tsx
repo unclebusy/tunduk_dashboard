@@ -129,20 +129,20 @@ describe('Candidate Dashboard integration', () => {
     renderCandidateDashboard(['/candidates']);
 
     expect(
-      await screen.findByText(/по текущим фильтрам кандидаты не найдены\./i),
+      await screen.findByText(/по текущим фильтрам кандидаты не найдены/i),
     ).toBeTruthy();
-    expect(screen.getByText(/показано 0 из 0 кандидатов\./i)).toBeTruthy();
+    expect(screen.getByText(/показано 0 из 0 кандидатов/i)).toBeTruthy();
   });
 
   it('shows an error state when candidate loading fails', async () => {
     vi.mocked(candidatesApi.getCandidates).mockRejectedValue(
-      new Error('Не удалось загрузить список кандидатов.'),
+      new Error('Не удалось загрузить список кандидатов'),
     );
 
     renderCandidateDashboard(['/candidates']);
 
     expect(
-      await screen.findByText(/не удалось загрузить список кандидатов\./i),
+      await screen.findByText(/не удалось загрузить список кандидатов/i),
     ).toBeTruthy();
     expect(
       screen.getByRole('button', { name: /повторить/i }),
