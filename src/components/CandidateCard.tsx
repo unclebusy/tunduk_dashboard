@@ -1,0 +1,66 @@
+import { Link } from 'react-router';
+import type { Candidate } from '../types/candidate';
+
+interface CandidateCardProps {
+  candidate: Candidate;
+}
+
+function formatCreatedAt(value: string): string {
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(value));
+}
+
+function CandidateCard({ candidate }: CandidateCardProps) {
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-2">
+          <div>
+            <h3 className="text-base font-semibold text-slate-900">
+              <Link
+                to={`/candidates/${candidate.id}`}
+                className="transition-colors hover:text-slate-700"
+              >
+                {candidate.name}
+              </Link>
+            </h3>
+            <p className="text-sm text-slate-600">{candidate.pos_label}</p>
+          </div>
+
+          <dl className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+            <div>
+              <dt className="font-medium text-slate-900">City</dt>
+              <dd>{candidate.city}</dd>
+            </div>
+            <div>
+              <dt className="font-medium text-slate-900">Status</dt>
+              <dd className="capitalize">{candidate.status}</dd>
+            </div>
+            <div>
+              <dt className="font-medium text-slate-900">Verdict</dt>
+              <dd>{candidate.verdict}</dd>
+            </div>
+            <div>
+              <dt className="font-medium text-slate-900">Added</dt>
+              <dd>{formatCreatedAt(candidate.createdAt)}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div className="shrink-0 text-sm text-slate-500">
+          <a
+            href={`mailto:${candidate.email}`}
+            className="transition-colors hover:text-slate-900"
+          >
+            {candidate.email}
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export default CandidateCard;
