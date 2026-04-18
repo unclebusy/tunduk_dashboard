@@ -1,4 +1,5 @@
 import './styles.css';
+import { NavLink, Outlet } from 'react-router';
 
 function App() {
   return (
@@ -13,21 +14,26 @@ function App() {
               Tunduk Dashboard
             </h1>
           </div>
+
+          <nav className="flex items-center gap-2">
+            <NavLink
+              to="/candidates"
+              className={({ isActive }) =>
+                [
+                  'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-slate-900 text-white'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                ].join(' ')
+              }
+            >
+              Candidates
+            </NavLink>
+          </nav>
         </header>
 
         <main className="flex-1">
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="max-w-2xl space-y-3">
-              <h2 className="text-lg font-semibold text-slate-900">
-                Project baseline is ready
-              </h2>
-              <p className="text-sm leading-6 text-slate-600">
-                Tailwind CSS is configured with a minimal global theme for a
-                clean dashboard foundation. Business logic and task-specific UI
-                can be added incrementally.
-              </p>
-            </div>
-          </section>
+          <Outlet />
         </main>
       </div>
     </div>
