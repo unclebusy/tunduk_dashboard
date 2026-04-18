@@ -34,7 +34,7 @@ function CandidateDetailHeader({
       <div className="space-y-4">
         <Link
           to={backTo}
-          className="inline-flex text-sm font-medium text-[#1560BD] transition-colors hover:text-[#0f4a92]"
+          className="inline-flex cursor-pointer text-sm font-medium text-[#1560BD] transition-colors hover:text-[#0f4a92]"
         >
           Назад к списку
         </Link>

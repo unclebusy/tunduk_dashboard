@@ -39,7 +39,7 @@ function App() {
             <Link
               to={candidatesLink}
               className={[
-                'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'cursor-pointer rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 isCandidatesSectionActive
                   ? 'bg-[#1560BD] text-white'
                   : 'text-slate-600 hover:bg-[#1560BD]/10 hover:text-[#1560BD]',

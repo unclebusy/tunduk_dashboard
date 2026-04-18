@@ -19,7 +19,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <Link
           to={candidateDetailPath}
-          className="block space-y-2 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+          className="block cursor-pointer space-y-2 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
         >
           <div>
             <h3 className="text-base font-semibold text-slate-900">
@@ -58,7 +58,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
         <div className="shrink-0">
           <Link
             to={candidateDetailPath}
-            className="inline-flex rounded-lg border border-[#1560BD]/20 px-3 py-2 font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92]"
+            className="inline-flex cursor-pointer rounded-lg border border-[#1560BD]/20 px-3 py-2 font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92]"
           >
             Подробнее
           </Link>

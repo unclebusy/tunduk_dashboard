@@ -150,7 +150,7 @@ function CandidatesListPage() {
           <button
             type="button"
             onClick={() => setReloadKey((currentValue) => currentValue + 1)}
-            className="inline-flex rounded-lg bg-[#1560BD] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0f4a92]"
+            className="inline-flex cursor-pointer rounded-lg bg-[#1560BD] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0f4a92]"
           >
             Повторить
           </button>
@@ -271,7 +271,7 @@ function CandidatesListPage() {
                 type="button"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:opacity-50"
+                className="cursor-pointer rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Назад
               </button>
@@ -280,7 +280,7 @@ function CandidatesListPage() {
                 type="button"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:opacity-50"
+                className="cursor-pointer rounded-lg border border-[#1560BD]/20 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-[#1560BD]/10 hover:text-[#0f4a92] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Далее
               </button>
