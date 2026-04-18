@@ -1,52 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link, useLocation, useParams } from 'react-router';
 import CandidateDetailContacts from '../components/CandidateDetailContacts';
 import CandidateDetailEvaluation from '../components/CandidateDetailEvaluation';
 import CandidateDetailHeader from '../components/CandidateDetailHeader';
 import CandidateDetailProfile from '../components/CandidateDetailProfile';
-import { getCandidateById } from '../services/candidatesApi';
-import type { Candidate } from '../types/candidate';
+import { useCandidatesStore } from '../store/useCandidatesStore';
 
 function CandidateDetailPage() {
   const { candidateId } = useParams();
   const { search } = useLocation();
-  const [candidate, setCandidate] = useState<Candidate | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const candidate = useCandidatesStore((state) =>
+    candidateId ? state.candidateDetails[candidateId] ?? null : null,
+  );
+  const isLoading = useCandidatesStore((state) => state.isCandidateDetailLoading);
+  const detailError = useCandidatesStore((state) => state.candidateDetailError);
+  const loadCandidateById = useCandidatesStore((state) => state.loadCandidateById);
   const backToCandidatesPath = `/candidates${search}`;
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function loadCandidate() {
-      if (!candidateId) {
-        setCandidate(null);
-        setIsLoading(false);
-
-        return;
-      }
-
-      setIsLoading(true);
-
-      try {
-        const nextCandidate = await getCandidateById(candidateId);
-
-        if (!isMounted) {
-          return;
-        }
-
-        setCandidate(nextCandidate);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
+    if (!candidateId) {
+      return;
     }
 
-    void loadCandidate();
-
-    return () => {
-      isMounted = false;
-    };
+    void loadCandidateById(candidateId);
   }, [candidateId]);
 
   if (isLoading) {
@@ -70,10 +46,11 @@ function CandidateDetailPage() {
         <div className="space-y-4">
           <div className="space-y-2">
             <h2 className="text-lg font-semibold text-slate-900">
-              Candidate Not Found
+              {detailError ? 'Failed to Load Candidate' : 'Candidate Not Found'}
             </h2>
             <p className="text-sm leading-6 text-slate-600">
-              No candidate exists for ID: {candidateId ?? 'unknown'}.
+              {detailError ??
+                `No candidate exists for ID: ${candidateId ?? 'unknown'}.`}
             </p>
           </div>
           <Link

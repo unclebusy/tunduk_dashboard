@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import CandidateCard from '../components/CandidateCard';
 import { useDebounce } from '../hooks/useDebounce';
-import { getCandidates } from '../services/candidatesApi';
 import type { Candidate, CandidateVerdict } from '../types/candidate';
+import { useCandidatesStore } from '../store/useCandidatesStore';
 import {
   parseCandidateListQueryParams,
   serializeCandidateListQueryParams,
@@ -47,10 +47,11 @@ function sortCandidates(
 
 function CandidatesListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [candidates, setCandidates] = useState<Candidate[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const candidates = useCandidatesStore((state) => state.candidates);
+  const isLoading = useCandidatesStore((state) => state.isCandidatesLoading);
+  const errorMessage = useCandidatesStore((state) => state.candidatesError);
+  const loadCandidates = useCandidatesStore((state) => state.loadCandidates);
   const queryParams = parseCandidateListQueryParams(searchParams);
   const [searchInputValue, setSearchInputValue] = useState(
     queryParams.search ?? '',
@@ -122,42 +123,7 @@ function CandidatesListPage() {
   }, [currentPage, queryParams.page]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function loadCandidates() {
-      setIsLoading(true);
-      setErrorMessage(null);
-
-      try {
-        const nextCandidates = await getCandidates();
-
-        if (!isMounted) {
-          return;
-        }
-
-        setCandidates(nextCandidates);
-      } catch (error) {
-        if (!isMounted) {
-          return;
-        }
-
-        setErrorMessage(
-          error instanceof Error
-            ? error.message
-            : 'Failed to load candidates.',
-        );
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    void loadCandidates();
-
-    return () => {
-      isMounted = false;
-    };
+    void loadCandidates(reloadKey > 0);
   }, [reloadKey]);
 
   if (isLoading) {
