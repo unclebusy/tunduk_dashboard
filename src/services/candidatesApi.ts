@@ -1,4 +1,4 @@
-import { mockCandidates } from './candidates';
+import { mockCandidatesLarge } from './candidates';
 import type { Candidate, CandidateWorkflowStatus } from '../types/candidate';
 
 const DEFAULT_NETWORK_DELAY_MS = 400;
@@ -27,7 +27,7 @@ function wait(delayMs: number): Promise<void> {
   });
 }
 
-let candidatesDb: Candidate[] = cloneCandidates(mockCandidates);
+let candidatesDb: Candidate[] = cloneCandidates(mockCandidatesLarge);
 
 export async function getCandidates(delayMs = DEFAULT_NETWORK_DELAY_MS): Promise<Candidate[]> {
   await wait(delayMs);

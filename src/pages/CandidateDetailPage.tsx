@@ -63,7 +63,7 @@ function CandidateDetailPage() {
 
     setStatusNotification(null);
     void loadCandidateById(candidateId);
-  }, [candidateId]);
+  }, [candidateId, loadCandidateById]);
 
   if (isLoading && !candidate) {
     return (

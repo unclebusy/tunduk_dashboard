@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import CandidateCard from '../components/CandidateCard';
 import { useDebounce } from '../hooks/useDebounce';
@@ -40,18 +40,24 @@ function CandidatesListPage() {
   const isLoading = useCandidatesStore((state) => state.isCandidatesLoading);
   const errorMessage = useCandidatesStore((state) => state.candidatesError);
   const loadCandidates = useCandidatesStore((state) => state.loadCandidates);
-  const queryParams = parseCandidateListQueryParams(searchParams);
+  const queryParams = useMemo(
+    () => parseCandidateListQueryParams(searchParams),
+    [searchParams],
+  );
   const [searchInputValue, setSearchInputValue] = useState(
     queryParams.search ?? '',
   );
   const debouncedSearchValue = useDebounce(searchInputValue, 300);
   const { currentPage, paginatedCandidates, totalPages, totalVisibleCandidates } =
-    getCandidateListViewData(candidates, queryParams);
+    useMemo(
+      () => getCandidateListViewData(candidates, queryParams),
+      [candidates, queryParams],
+    );
 
-  function updateQueryParams(
+  const updateQueryParams = useCallback((
     nextQueryParams: Partial<typeof queryParams>,
     replace = false,
-  ) {
+  ) => {
     setSearchParams(
       serializeCandidateListQueryParams({
         ...queryParams,
@@ -59,23 +65,23 @@ function CandidatesListPage() {
       }),
       { replace },
     );
-  }
+  }, [queryParams, setSearchParams]);
 
-  function handleVerdictChange(nextVerdict?: CandidateVerdict) {
+  const handleVerdictChange = useCallback((nextVerdict?: CandidateVerdict) => {
     updateQueryParams({ verdict: nextVerdict, page: 1 });
-  }
+  }, [updateQueryParams]);
 
-  function handleSearchChange(nextSearch: string) {
+  const handleSearchChange = useCallback((nextSearch: string) => {
     updateQueryParams({ search: nextSearch, page: 1 });
-  }
+  }, [updateQueryParams]);
 
-  function handleSortChange(nextSort?: CandidateSortField) {
+  const handleSortChange = useCallback((nextSort?: CandidateSortField) => {
     updateQueryParams({ sort: nextSort, page: 1 });
-  }
+  }, [updateQueryParams]);
 
-  function handlePageChange(nextPage: number) {
+  const handlePageChange = useCallback((nextPage: number) => {
     updateQueryParams({ page: nextPage });
-  }
+  }, [updateQueryParams]);
 
   useEffect(() => {
     setSearchInputValue(queryParams.search ?? '');
@@ -87,7 +93,7 @@ function CandidatesListPage() {
     }
 
     handleSearchChange(debouncedSearchValue);
-  }, [debouncedSearchValue, queryParams.search]);
+  }, [debouncedSearchValue, handleSearchChange, queryParams.search]);
 
   useEffect(() => {
     if (queryParams.page === currentPage) {
@@ -95,11 +101,11 @@ function CandidatesListPage() {
     }
 
     updateQueryParams({ page: currentPage }, true);
-  }, [currentPage, queryParams.page]);
+  }, [currentPage, queryParams.page, updateQueryParams]);
 
   useEffect(() => {
     void loadCandidates(reloadKey > 0);
-  }, [reloadKey]);
+  }, [loadCandidates, reloadKey]);
 
   if (isLoading) {
     return (

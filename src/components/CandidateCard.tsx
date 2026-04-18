@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link, useLocation } from 'react-router';
 import type { Candidate } from '../types/candidate';
 import {
@@ -67,4 +68,4 @@ function CandidateCard({ candidate }: CandidateCardProps) {
   );
 }
 
-export default CandidateCard;
+export default memo(CandidateCard);

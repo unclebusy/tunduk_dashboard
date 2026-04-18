@@ -1,15 +1,9 @@
-import { createBrowserRouter, Navigate, useLocation, useParams } from 'react-router';
+import { createBrowserRouter, Navigate } from 'react-router';
 import App from '../App';
 import CandidateDetailPage from '../pages/CandidateDetailPage';
 import CandidatesListPage from '../pages/CandidatesListPage';
 import NotFoundPage from '../pages/NotFoundPage';
-
-function LegacyCandidateDetailRedirect() {
-  const { candidateId } = useParams();
-  const { search } = useLocation();
-
-  return <Navigate to={`/candidate/${candidateId ?? ''}${search}`} replace />;
-}
+import LegacyCandidateDetailRedirect from './LegacyCandidateDetailRedirect';
 
 export const router = createBrowserRouter([
   {
