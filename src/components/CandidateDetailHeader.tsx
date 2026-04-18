@@ -33,7 +33,7 @@ function CandidateDetailHeader({
           to={backTo}
           className="inline-flex text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
         >
-          Back to candidates
+          Назад к списку
         </Link>
 
         <div className="space-y-2">
@@ -48,15 +48,15 @@ function CandidateDetailHeader({
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-start">
           <dl className="grid gap-4 text-sm text-slate-600 sm:grid-cols-3">
             <div>
-              <dt className="font-medium text-slate-900">City</dt>
+              <dt className="font-medium text-slate-900">Город</dt>
               <dd>{candidate.city}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-900">Current status</dt>
+              <dt className="font-medium text-slate-900">Текущий статус</dt>
               <dd>{getCandidateWorkflowStatusLabel(candidate.status)}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-900">Verdict</dt>
+              <dt className="font-medium text-slate-900">Вердикт</dt>
               <dd>
                 <span
                   className={[
@@ -73,7 +73,7 @@ function CandidateDetailHeader({
           <div>
             <label className="block w-full lg:min-w-56">
               <span className="mb-2 block text-sm font-medium text-slate-900">
-                Workflow status
+                Статус воронки
               </span>
               <select
                 value={candidate.status}
@@ -93,7 +93,7 @@ function CandidateDetailHeader({
 
             {isStatusUpdating ? (
               <p className="mt-2 text-sm text-slate-500" aria-live="polite">
-                Saving status...
+                Сохранение статуса...
               </p>
             ) : null}
           </div>

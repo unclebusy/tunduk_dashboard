@@ -17,10 +17,10 @@ function CandidateDetailEvaluation({
         <div className="space-y-4">
           <div>
             <h3 className="text-base font-semibold text-slate-900">
-              Evaluation Criteria
+              Критерии оценки
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              Criteria-based assessment from the current mock review.
+              Оценка кандидата по ключевым критериям.
             </p>
           </div>
 
@@ -53,10 +53,10 @@ function CandidateDetailEvaluation({
         <div className="space-y-4">
           <div>
             <h3 className="text-base font-semibold text-slate-900">
-              Interview Questions
+              Вопросы на интервью
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              Suggested follow-up questions for the next conversation.
+              Вопросы для следующего этапа общения с кандидатом.
             </p>
           </div>
 

@@ -36,19 +36,19 @@ function CandidateCard({ candidate }: CandidateCardProps) {
 
           <dl className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
             <div>
-              <dt className="font-medium text-slate-900">City</dt>
+              <dt className="font-medium text-slate-900">Город</dt>
               <dd>{candidate.city}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-900">Status</dt>
+              <dt className="font-medium text-slate-900">Статус</dt>
               <dd>{getCandidateWorkflowStatusLabel(candidate.status)}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-900">Verdict</dt>
+              <dt className="font-medium text-slate-900">Вердикт</dt>
               <dd>{candidate.verdict}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-900">Added</dt>
+              <dt className="font-medium text-slate-900">Добавлен</dt>
               <dd>{formatCreatedAt(candidate.createdAt)}</dd>
             </div>
           </dl>
@@ -65,7 +65,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
             to={candidateDetailPath}
             className="inline-flex rounded-lg border border-slate-200 px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
           >
-            View details
+            Подробнее
           </Link>
         </div>
       </div>

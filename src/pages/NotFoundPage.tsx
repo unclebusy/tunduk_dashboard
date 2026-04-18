@@ -6,10 +6,10 @@ function NotFoundPage() {
       <div className="space-y-4">
         <div className="space-y-3">
           <h2 className="text-lg font-semibold text-slate-900">
-            Page Not Found
+            Страница не найдена
           </h2>
           <p className="text-sm leading-6 text-slate-600">
-            This route does not exist in the current app shell.
+            Такой страницы нет в текущем приложении.
           </p>
         </div>
 
@@ -17,7 +17,7 @@ function NotFoundPage() {
           to="/candidates"
           className="inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
         >
-          Go to candidates
+          Перейти к кандидатам
         </Link>
       </div>
     </section>

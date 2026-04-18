@@ -13,9 +13,9 @@ describe('candidateDetailStyles', () => {
   });
 
   it('maps criterion statuses to readable labels and colors', () => {
-    expect(getCriterionLabel('ok')).toBe('Match');
-    expect(getCriterionLabel('partial')).toBe('Partial');
-    expect(getCriterionLabel('no')).toBe('Gap');
+    expect(getCriterionLabel('ok')).toBe('Подходит');
+    expect(getCriterionLabel('partial')).toBe('Частично');
+    expect(getCriterionLabel('no')).toBe('Не подходит');
     expect(getCriterionBadgeClassName('ok')).toContain('emerald');
     expect(getCriterionBadgeClassName('partial')).toContain('amber');
     expect(getCriterionBadgeClassName('no')).toContain('rose');

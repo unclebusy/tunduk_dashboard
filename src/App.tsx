@@ -8,7 +8,7 @@ function App() {
         <header className="mb-8 flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">
-              Frontend Test
+              Тестовое задание
             </p>
             <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">
               Tunduk Dashboard
@@ -27,7 +27,7 @@ function App() {
                 ].join(' ')
               }
             >
-              Candidates
+              Кандидаты
             </NavLink>
           </nav>
         </header>

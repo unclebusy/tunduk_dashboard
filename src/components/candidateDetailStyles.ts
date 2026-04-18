@@ -30,10 +30,10 @@ export function getCriterionBadgeClassName(
 export function getCriterionLabel(status: CandidateCriterionStatus): string {
   switch (status) {
     case 'ok':
-      return 'Match';
+      return 'Подходит';
     case 'partial':
-      return 'Partial';
+      return 'Частично';
     case 'no':
-      return 'Gap';
+      return 'Не подходит';
   }
 }

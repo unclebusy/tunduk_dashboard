@@ -40,7 +40,7 @@ function CandidateDetailPage() {
     try {
       await updateCandidateStatus(candidate.id, status);
       setStatusNotification({
-        message: 'Candidate workflow status was updated successfully.',
+        message: 'Статус кандидата успешно обновлён.',
         type: 'success',
       });
     } catch (error) {
@@ -48,7 +48,7 @@ function CandidateDetailPage() {
         message:
           error instanceof Error
             ? error.message
-            : 'Failed to update candidate status.',
+            : 'Не удалось обновить статус кандидата.',
         type: 'error',
       });
     } finally {
@@ -70,10 +70,10 @@ function CandidateDetailPage() {
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="space-y-3">
           <h2 className="text-lg font-semibold text-slate-900">
-            Candidate Detail
+            Карточка кандидата
           </h2>
           <p className="text-sm leading-6 text-slate-600">
-            Loading candidate details...
+            Загрузка данных кандидата...
           </p>
         </div>
       </section>
@@ -86,18 +86,18 @@ function CandidateDetailPage() {
         <div className="space-y-4">
           <div className="space-y-2">
             <h2 className="text-lg font-semibold text-slate-900">
-              {detailError ? 'Failed to Load Candidate' : 'Candidate Not Found'}
+              {detailError ? 'Не удалось загрузить кандидата' : 'Кандидат не найден'}
             </h2>
             <p className="text-sm leading-6 text-slate-600">
               {detailError ??
-                `No candidate exists for ID: ${candidateId ?? 'unknown'}.`}
+                `Кандидат с ID ${candidateId ?? 'unknown'} не найден.`}
             </p>
           </div>
           <Link
             to={backToCandidatesPath}
             className="inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
           >
-            Back to candidates
+            Назад к списку
           </Link>
         </div>
       </section>

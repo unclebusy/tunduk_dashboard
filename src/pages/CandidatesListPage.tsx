@@ -17,7 +17,7 @@ const verdictOptions: Array<{
   label: string;
   value?: CandidateVerdict;
 }> = [
-  { label: 'All verdicts' },
+  { label: 'Все вердикты' },
   { label: 'Подходит', value: 'ПОДХОДИТ' },
   { label: 'Частично', value: 'ЧАСТИЧНО' },
   { label: 'Не соответствует', value: 'НЕ СООТВЕТСТВУЕТ' },
@@ -92,10 +92,10 @@ function CandidatesListPage() {
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="space-y-3">
           <h2 className="text-lg font-semibold text-slate-900">
-            Candidates List
+            Список кандидатов
           </h2>
           <p className="text-sm leading-6 text-slate-600">
-            Loading candidates...
+            Загрузка кандидатов...
           </p>
         </div>
       </section>
@@ -108,7 +108,7 @@ function CandidatesListPage() {
         <div className="space-y-4">
           <div className="space-y-2">
             <h2 className="text-lg font-semibold text-slate-900">
-              Candidates List
+              Список кандидатов
             </h2>
             <p className="text-sm leading-6 text-red-700">{errorMessage}</p>
           </div>
@@ -117,7 +117,7 @@ function CandidatesListPage() {
             onClick={() => setReloadKey((currentValue) => currentValue + 1)}
             className="inline-flex rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
           >
-            Try again
+            Повторить
           </button>
         </div>
       </section>
@@ -130,31 +130,31 @@ function CandidatesListPage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
             <h2 className="text-lg font-semibold text-slate-900">
-              Candidates List
+              Список кандидатов
             </h2>
             <p className="text-sm leading-6 text-slate-600">
-              Showing {paginatedCandidates.length} of {totalVisibleCandidates}{' '}
-              candidates from the mock data source.
+              Показано {paginatedCandidates.length} из {totalVisibleCandidates}{' '}
+              кандидатов.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:min-w-[28rem]">
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-slate-900">
-                Search by name
+                Поиск по ФИО
               </span>
               <input
                 type="search"
                 value={searchInputValue}
                 onChange={(event) => setSearchInputValue(event.target.value)}
-                placeholder="Enter full name"
+                placeholder="Введите полное имя"
                 className="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition-colors focus:border-slate-400"
               />
             </label>
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-slate-900">
-                Verdict
+                Вердикт
               </span>
               <select
                 value={queryParams.verdict ?? ''}
@@ -185,7 +185,7 @@ function CandidatesListPage() {
           ))
         ) : (
           <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-600 shadow-sm">
-            No candidates match the current filters.
+            По текущим фильтрам кандидаты не найдены.
           </div>
         )}
       </section>
@@ -194,7 +194,7 @@ function CandidatesListPage() {
         <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-slate-600">
-              Page {currentPage} of {totalPages}
+              Страница {currentPage} из {totalPages}
             </p>
 
             <div className="flex items-center gap-2">
@@ -204,7 +204,7 @@ function CandidatesListPage() {
                 disabled={currentPage === 1}
                 className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Previous
+                Назад
               </button>
 
               <button
@@ -213,7 +213,7 @@ function CandidatesListPage() {
                 disabled={currentPage === totalPages}
                 className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Next
+                Далее
               </button>
             </div>
           </div>

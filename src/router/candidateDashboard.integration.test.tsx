@@ -93,7 +93,7 @@ describe('Candidate Dashboard integration', () => {
       ),
     ).toBeTruthy();
     expect(
-      screen.getByRole('combobox', { name: /workflow status/i }),
+      screen.getByRole('combobox', { name: /статус воронки/i }),
     ).toBeTruthy();
   });
 
@@ -101,10 +101,10 @@ describe('Candidate Dashboard integration', () => {
     renderCandidateDashboard(['/candidates/unknown-id']);
 
     expect(
-      await screen.findByRole('heading', { name: /candidate not found/i }),
+      await screen.findByRole('heading', { name: /кандидат не найден/i }),
     ).toBeTruthy();
     expect(
-      screen.getByRole('link', { name: /back to candidates/i }),
+      screen.getByRole('link', { name: /назад к списку/i }),
     ).toBeTruthy();
   });
 });
