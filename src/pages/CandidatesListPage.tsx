@@ -83,6 +83,21 @@ function CandidatesListPage() {
     updateQueryParams({ page: nextPage });
   }, [updateQueryParams]);
 
+  const handleResetFilters = useCallback(() => {
+    setSearchInputValue('');
+    setSearchParams(
+      serializeCandidateListQueryParams({
+        page: 1,
+      }),
+    );
+  }, [setSearchParams]);
+
+  const hasActiveFilters =
+    Boolean(queryParams.search) ||
+    Boolean(queryParams.verdict) ||
+    Boolean(queryParams.sort) ||
+    queryParams.page > 1;
+
   useEffect(() => {
     setSearchInputValue(queryParams.search ?? '');
   }, [queryParams.search]);
@@ -158,8 +173,8 @@ function CandidatesListPage() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 lg:min-w-[28rem]">
-            <label className="block">
+          <div className="grid gap-4 lg:min-w-[36rem] lg:grid-cols-[minmax(0,1fr)_12rem_12rem_auto]">
+            <label className="block min-w-0">
               <span className="mb-2 block text-sm font-medium text-slate-900">
                 Поиск по ФИО
               </span>
@@ -217,6 +232,17 @@ function CandidatesListPage() {
                 ))}
               </select>
             </label>
+
+            <div className="flex items-end">
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                disabled={!hasActiveFilters}
+                className="inline-flex cursor-pointer rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Сбросить
+              </button>
+            </div>
           </div>
         </div>
       </section>
