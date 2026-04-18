@@ -113,7 +113,7 @@ function CandidateCard({ candidate }: CandidateCardProps) {
               {visibleStackItems.map((stackItem) => (
                 <span
                   key={stackItem}
-                  className="inline-flex rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600"
+                  className="inline-flex whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600"
                 >
                   {stackItem}
                 </span>
