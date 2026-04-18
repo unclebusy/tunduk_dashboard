@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import CandidateCard from '../components/CandidateCard';
 import { useDebounce } from '../hooks/useDebounce';
-import type { Candidate, CandidateVerdict } from '../types/candidate';
+import type { CandidateVerdict } from '../types/candidate';
 import { useCandidatesStore } from '../store/useCandidatesStore';
+import {
+  getCandidateListViewData,
+  CANDIDATES_PAGE_SIZE,
+} from '../utils/candidateListView';
 import {
   parseCandidateListQueryParams,
   serializeCandidateListQueryParams,
@@ -18,32 +22,6 @@ const verdictOptions: Array<{
   { label: 'Частично', value: 'ЧАСТИЧНО' },
   { label: 'Не соответствует', value: 'НЕ СООТВЕТСТВУЕТ' },
 ];
-const PAGE_SIZE = 10;
-
-function sortCandidates(
-  candidates: Candidate[],
-  sortField: 'createdAt' | 'name' | 'verdict' | 'status' | undefined,
-): Candidate[] {
-  if (!sortField) {
-    return candidates;
-  }
-
-  return [...candidates].sort((leftCandidate, rightCandidate) => {
-    switch (sortField) {
-      case 'name':
-        return leftCandidate.name.localeCompare(rightCandidate.name);
-      case 'verdict':
-        return leftCandidate.verdict.localeCompare(rightCandidate.verdict);
-      case 'status':
-        return leftCandidate.status.localeCompare(rightCandidate.status);
-      case 'createdAt':
-        return (
-          new Date(rightCandidate.createdAt).getTime() -
-          new Date(leftCandidate.createdAt).getTime()
-        );
-    }
-  });
-}
 
 function CandidatesListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -57,25 +35,8 @@ function CandidatesListPage() {
     queryParams.search ?? '',
   );
   const debouncedSearchValue = useDebounce(searchInputValue, 300);
-  const filteredCandidates = candidates.filter((candidate) => {
-    const matchesVerdict = queryParams.verdict
-      ? candidate.verdict === queryParams.verdict
-      : true;
-    const matchesSearch = queryParams.search
-      ? candidate.name
-          .toLocaleLowerCase()
-          .includes(queryParams.search.toLocaleLowerCase())
-      : true;
-
-    return matchesVerdict && matchesSearch;
-  });
-  const sortedCandidates = sortCandidates(filteredCandidates, queryParams.sort);
-  const totalPages = Math.max(1, Math.ceil(sortedCandidates.length / PAGE_SIZE));
-  const currentPage = Math.min(queryParams.page, totalPages);
-  const paginatedCandidates = sortedCandidates.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE,
-  );
+  const { currentPage, paginatedCandidates, totalPages, totalVisibleCandidates } =
+    getCandidateListViewData(candidates, queryParams);
 
   function updateQueryParams(
     nextQueryParams: Partial<typeof queryParams>,
@@ -172,7 +133,7 @@ function CandidatesListPage() {
               Candidates List
             </h2>
             <p className="text-sm leading-6 text-slate-600">
-              Showing {paginatedCandidates.length} of {sortedCandidates.length}{' '}
+              Showing {paginatedCandidates.length} of {totalVisibleCandidates}{' '}
               candidates from the mock data source.
             </p>
           </div>
@@ -218,7 +179,7 @@ function CandidatesListPage() {
       </section>
 
       <section className="space-y-4">
-        {sortedCandidates.length > 0 ? (
+        {totalVisibleCandidates > 0 ? (
           paginatedCandidates.map((candidate) => (
             <CandidateCard key={candidate.id} candidate={candidate} />
           ))
@@ -229,7 +190,7 @@ function CandidatesListPage() {
         )}
       </section>
 
-      {sortedCandidates.length > PAGE_SIZE ? (
+      {totalVisibleCandidates > CANDIDATES_PAGE_SIZE ? (
         <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-slate-600">
