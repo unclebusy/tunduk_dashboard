@@ -169,25 +169,20 @@ function CandidatesListPage() {
     <div className="space-y-4">
       <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-          <div className="min-w-0 space-y-1">
+          <div className="min-w-0 space-y-1.5 xl:pb-0.5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400">
               Список кандидатов
             </p>
-            <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
-              <p className="text-xl font-semibold text-slate-900">
-                {totalVisibleCandidates} кандидатов
+            <div className="flex flex-wrap items-baseline gap-x-2">
+              <p className="text-lg font-medium text-slate-500">
+                Кандидатов:
               </p>
-              <p className="text-sm text-slate-500">
-                Страница {currentPage} из {totalPages}
+              <p className="text-2xl font-semibold leading-none text-slate-900">
+                {totalVisibleCandidates}
               </p>
-              {hasActiveFilters ? (
-                <p className="text-sm font-medium text-slate-500">
-                  Активных фильтров: {activeFiltersCount}
-                </p>
-              ) : null}
             </div>
             <p className="text-sm text-slate-500">
-              На текущей странице показано {paginatedCandidates.length}
+              Фильтров: {activeFiltersCount}
             </p>
           </div>
 
