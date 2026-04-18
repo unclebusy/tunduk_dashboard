@@ -1,10 +1,9 @@
-export type CandidateVerdict = 'ПОДХОДИТ' | 'ЧАСТИЧНО' | 'НЕ ПОДХОДИТ';
+export type CandidateVerdict = 'ПОДХОДИТ' | 'ЧАСТИЧНО' | 'НЕ СООТВЕТСТВУЕТ';
 
 export type CandidateWorkflowStatus =
   | 'new'
   | 'review'
-  | 'interview'
-  | 'offer'
+  | 'invited'
   | 'rejected';
 
 export type CandidateSortField =
