@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router';
 import CandidateDetailContacts from '../components/CandidateDetailContacts';
 import CandidateDetailEvaluation from '../components/CandidateDetailEvaluation';
 import CandidateDetailHeader from '../components/CandidateDetailHeader';
 import CandidateDetailProfile from '../components/CandidateDetailProfile';
 import { useCandidatesStore } from '../store/useCandidatesStore';
+import type { CandidateWorkflowStatus } from '../types/candidate';
 
 function CandidateDetailPage() {
   const { candidateId } = useParams();
@@ -15,7 +16,33 @@ function CandidateDetailPage() {
   const isLoading = useCandidatesStore((state) => state.isCandidateDetailLoading);
   const detailError = useCandidatesStore((state) => state.candidateDetailError);
   const loadCandidateById = useCandidatesStore((state) => state.loadCandidateById);
+  const updateCandidateStatus = useCandidatesStore(
+    (state) => state.updateCandidateStatus,
+  );
   const backToCandidatesPath = `/candidates${search}`;
+  const [isStatusUpdating, setIsStatusUpdating] = useState(false);
+  const [statusError, setStatusError] = useState<string | null>(null);
+
+  async function handleStatusChange(status: CandidateWorkflowStatus) {
+    if (!candidate || candidate.status === status) {
+      return;
+    }
+
+    setIsStatusUpdating(true);
+    setStatusError(null);
+
+    try {
+      await updateCandidateStatus(candidate.id, status);
+    } catch (error) {
+      setStatusError(
+        error instanceof Error
+          ? error.message
+          : 'Failed to update candidate status.',
+      );
+    } finally {
+      setIsStatusUpdating(false);
+    }
+  }
 
   useEffect(() => {
     if (!candidateId) {
@@ -66,7 +93,13 @@ function CandidateDetailPage() {
 
   return (
     <div className="space-y-6">
-      <CandidateDetailHeader backTo={backToCandidatesPath} candidate={candidate} />
+      <CandidateDetailHeader
+        backTo={backToCandidatesPath}
+        candidate={candidate}
+        isStatusUpdating={isStatusUpdating}
+        onStatusChange={handleStatusChange}
+        statusError={statusError}
+      />
       <CandidateDetailContacts candidate={candidate} />
       <CandidateDetailProfile candidate={candidate} />
       <CandidateDetailEvaluation candidate={candidate} />
