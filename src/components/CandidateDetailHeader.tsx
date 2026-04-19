@@ -8,6 +8,7 @@ import {
   getCandidateWorkflowStatusLabel,
   getCandidateWorkflowStatusTextClassName,
 } from '../utils/candidateWorkflowStatus';
+import { getDisplayValue } from '../utils/candidateDisplay';
 
 interface CandidateDetailHeaderProps {
   backTo: string;
@@ -73,7 +74,7 @@ function CandidateDetailHeader({
                   Город
                 </dt>
                 <dd className="mt-1 font-medium text-slate-900">
-                  {candidate.city}
+                  {getDisplayValue(candidate.city)}
                 </dd>
               </div>
               <div>

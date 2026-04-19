@@ -9,6 +9,7 @@ import {
   getCandidateWorkflowStatusLabel,
   getCandidateWorkflowStatusTextClassName,
 } from '../utils/candidateWorkflowStatus';
+import { getDisplayValue } from '../utils/candidateDisplay';
 
 interface CandidateCardProps {
   candidate: Candidate;
@@ -52,7 +53,9 @@ function CandidateCard({ candidate }: CandidateCardProps) {
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
               <span className="inline-flex items-baseline gap-1.5 text-slate-500">
                 <span>Город:</span>
-                <span className="font-medium text-slate-700">{candidate.city}</span>
+                <span className="font-medium text-slate-700">
+                  {getDisplayValue(candidate.city)}
+                </span>
               </span>
               <span className="inline-flex items-baseline gap-1.5 text-slate-500">
                 <span>Грейд:</span>

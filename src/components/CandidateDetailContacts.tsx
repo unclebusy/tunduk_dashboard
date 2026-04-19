@@ -1,4 +1,11 @@
 import type { Candidate } from '../types/candidate';
+import {
+  getDisplayValue,
+  getEmailHref,
+  getPhoneHref,
+  getTelegramHref,
+  isFilledValue,
+} from '../utils/candidateDisplay';
 
 interface CandidateDetailContactsProps {
   candidate: Candidate;
@@ -7,6 +14,11 @@ interface CandidateDetailContactsProps {
 function CandidateDetailContacts({
   candidate,
 }: CandidateDetailContactsProps) {
+  const phoneHref = getPhoneHref(candidate.phone);
+  const telegramHref = getTelegramHref(candidate.tg);
+  const emailHref = getEmailHref(candidate.email);
+  const hasResumeFile = isFilledValue(candidate.file);
+
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="space-y-4">
@@ -24,12 +36,18 @@ function CandidateDetailContacts({
                 Телефон
               </dt>
               <dd className="mt-2">
-                <a
-                  href={`tel:${candidate.phone}`}
-                  className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
-                >
-                  {candidate.phone}
-                </a>
+                {phoneHref ? (
+                  <a
+                    href={phoneHref}
+                    className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
+                  >
+                    {getDisplayValue(candidate.phone)}
+                  </a>
+                ) : (
+                  <span className="font-medium text-slate-400">
+                    {getDisplayValue(candidate.phone)}
+                  </span>
+                )}
               </dd>
             </div>
             <div className="rounded-xl border border-slate-200 px-4 py-3">
@@ -37,14 +55,20 @@ function CandidateDetailContacts({
                 Telegram
               </dt>
               <dd className="mt-2">
-                <a
-                  href={`https://t.me/${candidate.tg.replace(/^@/, '')}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
-                >
-                  {candidate.tg}
-                </a>
+                {telegramHref ? (
+                  <a
+                    href={telegramHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
+                  >
+                    {getDisplayValue(candidate.tg)}
+                  </a>
+                ) : (
+                  <span className="font-medium text-slate-400">
+                    {getDisplayValue(candidate.tg)}
+                  </span>
+                )}
               </dd>
             </div>
             <div className="rounded-xl border border-slate-200 px-4 py-3">
@@ -52,12 +76,18 @@ function CandidateDetailContacts({
                 Эл. почта
               </dt>
               <dd className="mt-2">
-                <a
-                  href={`mailto:${candidate.email}`}
-                  className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
-                >
-                  {candidate.email}
-                </a>
+                {emailHref ? (
+                  <a
+                    href={emailHref}
+                    className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
+                  >
+                    {getDisplayValue(candidate.email)}
+                  </a>
+                ) : (
+                  <span className="font-medium text-slate-400">
+                    {getDisplayValue(candidate.email)}
+                  </span>
+                )}
               </dd>
             </div>
           </dl>
@@ -69,12 +99,23 @@ function CandidateDetailContacts({
             <div className="mt-2 flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-slate-900">
-                  {candidate.file}
+                  {getDisplayValue(candidate.file, 'Файл не приложен')}
                 </p>
-                <p className="mt-1 text-xs text-slate-500">Файл приложен к профилю</p>
+                <p className="mt-1 text-xs text-slate-500">
+                  {hasResumeFile
+                    ? 'Файл приложен к профилю'
+                    : 'В профиле нет файла резюме'}
+                </p>
               </div>
-              <span className="whitespace-nowrap rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-[#1560BD]">
-                Открыть
+              <span
+                className={[
+                  'whitespace-nowrap rounded-lg border px-3 py-2 text-sm font-medium',
+                  hasResumeFile
+                    ? 'border-slate-200 text-[#1560BD]'
+                    : 'border-slate-200 text-slate-400',
+                ].join(' ')}
+              >
+                {hasResumeFile ? 'Открыть' : 'Недоступно'}
               </span>
             </div>
           </div>
