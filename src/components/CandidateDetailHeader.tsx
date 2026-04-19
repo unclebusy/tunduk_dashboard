@@ -4,7 +4,10 @@ import {
   getVerdictBadgeClassName,
   getVerdictLabel,
 } from './candidateDetailStyles';
-import { getCandidateWorkflowStatusLabel } from '../utils/candidateWorkflowStatus';
+import {
+  getCandidateWorkflowStatusLabel,
+  getCandidateWorkflowStatusTextClassName,
+} from '../utils/candidateWorkflowStatus';
 
 interface CandidateDetailHeaderProps {
   backTo: string;
@@ -117,8 +120,15 @@ function CandidateDetailHeader({
                 <dt className="text-xs font-medium uppercase tracking-[0.08em] text-slate-500">
                   Текущий статус
                 </dt>
-                <dd className="mt-1 font-medium text-slate-900">
-                  {getCandidateWorkflowStatusLabel(candidate.status)}
+                <dd className="mt-1">
+                  <span
+                    className={[
+                      'inline-flex text-xs font-medium',
+                      getCandidateWorkflowStatusTextClassName(candidate.status),
+                    ].join(' ')}
+                  >
+                    {getCandidateWorkflowStatusLabel(candidate.status)}
+                  </span>
                 </dd>
               </div>
             </dl>
