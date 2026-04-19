@@ -1,4 +1,5 @@
 import type { Candidate } from '../types/candidate';
+import { getDisplayValue } from '../utils/candidateDisplay';
 
 interface CandidateDetailProfileProps {
   candidate: Candidate;
@@ -264,7 +265,7 @@ function CandidateDetailProfile({ candidate }: CandidateDetailProfileProps) {
           </div>
 
           <div className="rounded-xl border border-slate-200 px-4 py-3 text-sm leading-6 text-slate-700">
-            {candidate.edu}
+            {getDisplayValue(candidate.edu)}
           </div>
         </div>
       </section>

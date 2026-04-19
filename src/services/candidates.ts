@@ -14,15 +14,15 @@ type RawCandidateRecord = {
   name: string;
   position: string;
   pos_label: string;
-  file: string;
-  email: string;
-  phone: string;
-  city: string;
-  tg: string;
+  file?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  city?: string | null;
+  tg?: string | null;
   exp: string[][];
   total_exp: string;
   stack: string;
-  edu: string;
+  edu?: string | null;
   verdict: string;
   vc: string;
   criteria: string[][];
@@ -98,9 +98,25 @@ function mapCriterion(item: string[]): CandidateCriterion {
   return [status, item[1] ?? ''];
 }
 
+function normalizeOptionalText(value: string | null | undefined): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const normalizedValue = value.trim();
+
+  return normalizedValue.length > 0 ? normalizedValue : null;
+}
+
 function mapCandidate(record: RawCandidateRecord): Candidate {
   return {
     ...record,
+    file: normalizeOptionalText(record.file),
+    email: normalizeOptionalText(record.email),
+    phone: normalizeOptionalText(record.phone),
+    city: normalizeOptionalText(record.city),
+    tg: normalizeOptionalText(record.tg),
+    edu: normalizeOptionalText(record.edu),
     verdict: mapVerdict(record.verdict),
     status: mapWorkflowStatus(record.status),
     exp: record.exp.map(mapExperienceItem),
