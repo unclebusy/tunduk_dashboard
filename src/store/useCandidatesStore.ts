@@ -7,10 +7,21 @@ import {
 } from '../services/candidatesApi';
 import type { Candidate, CandidateWorkflowStatus } from '../types/candidate';
 
+export interface CandidateStatusNotification {
+  message: string;
+  type: 'error' | 'success';
+}
+
+export interface CandidateStatusUpdateState {
+  isUpdating: boolean;
+  notification: CandidateStatusNotification | null;
+}
+
 interface CandidatesStoreState {
   candidates: Candidate[];
   candidateDetails: Record<string, Candidate>;
   statusUpdateRequestIds: Record<string, number>;
+  statusUpdateStateById: Record<string, CandidateStatusUpdateState>;
   isCandidatesLoading: boolean;
   candidatesError: string | null;
   isCandidateDetailLoading: boolean;
@@ -26,6 +37,7 @@ interface CandidatesStoreActions {
     status: CandidateWorkflowStatus,
     options?: UpdateCandidateStatusOptions,
   ) => Promise<Candidate>;
+  clearStatusUpdateNotification: (candidateId: string) => void;
 }
 
 type CandidatesStore = CandidatesStoreState & CandidatesStoreActions;
@@ -59,10 +71,18 @@ function upsertCandidate(
   );
 }
 
+function getInitialCandidateStatusUpdateState(): CandidateStatusUpdateState {
+  return {
+    isUpdating: false,
+    notification: null,
+  };
+}
+
 export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
   candidates: [],
   candidateDetails: {},
   statusUpdateRequestIds: {},
+  statusUpdateStateById: {},
   isCandidatesLoading: false,
   candidatesError: null,
   isCandidateDetailLoading: false,
@@ -157,6 +177,13 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
         ...currentState.statusUpdateRequestIds,
         [candidateId]: requestId,
       },
+      statusUpdateStateById: {
+        ...currentState.statusUpdateStateById,
+        [candidateId]: {
+          isUpdating: true,
+          notification: null,
+        },
+      },
       candidates: upsertCandidate(currentState.candidates, optimisticCandidate),
       candidateDetails: {
         ...currentState.candidateDetails,
@@ -177,6 +204,16 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
         }
 
         return {
+          statusUpdateStateById: {
+            ...currentState.statusUpdateStateById,
+            [candidateId]: {
+              isUpdating: false,
+              notification: {
+                message: 'Статус кандидата успешно обновлён',
+                type: 'success',
+              },
+            },
+          },
           candidates: upsertCandidate(currentState.candidates, updatedCandidate),
           candidateDetails: {
             ...currentState.candidateDetails,
@@ -193,6 +230,19 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
         }
 
         return {
+          statusUpdateStateById: {
+            ...currentState.statusUpdateStateById,
+            [candidateId]: {
+              isUpdating: false,
+              notification: {
+                message: getErrorMessage(
+                  error,
+                  'Не удалось обновить статус кандидата',
+                ),
+                type: 'error',
+              },
+            },
+          },
           candidates: upsertCandidate(currentState.candidates, existingCandidate),
           candidateDetails: {
             ...currentState.candidateDetails,
@@ -203,5 +253,20 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
 
       throw error;
     }
+  },
+
+  clearStatusUpdateNotification(candidateId) {
+    set((currentState) => ({
+      statusUpdateStateById: {
+        ...currentState.statusUpdateStateById,
+        [candidateId]: {
+          ...(
+            currentState.statusUpdateStateById[candidateId] ??
+            getInitialCandidateStatusUpdateState()
+          ),
+          notification: null,
+        },
+      },
+    }));
   },
 }));

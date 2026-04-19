@@ -47,6 +47,12 @@ describe('useCandidatesStore updateCandidateStatus', () => {
       .updateCandidateStatus(candidate.id, 'invited');
 
     expect(
+      useCandidatesStore.getState().statusUpdateStateById[candidate.id],
+    ).toEqual({
+      isUpdating: true,
+      notification: null,
+    });
+    expect(
       useCandidatesStore
         .getState()
         .candidates.find((item) => item.id === candidate.id)?.status,
@@ -57,6 +63,15 @@ describe('useCandidatesStore updateCandidateStatus', () => {
 
     await updatePromise;
 
+    expect(
+      useCandidatesStore.getState().statusUpdateStateById[candidate.id],
+    ).toEqual({
+      isUpdating: false,
+      notification: {
+        message: 'Статус кандидата успешно обновлён',
+        type: 'success',
+      },
+    });
     expect(
       useCandidatesStore
         .getState()
@@ -78,6 +93,15 @@ describe('useCandidatesStore updateCandidateStatus', () => {
       useCandidatesStore.getState().updateCandidateStatus(candidate.id, 'review'),
     ).rejects.toThrow('Failed to update candidate status');
 
+    expect(
+      useCandidatesStore.getState().statusUpdateStateById[candidate.id],
+    ).toEqual({
+      isUpdating: false,
+      notification: {
+        message: 'Failed to update candidate status',
+        type: 'error',
+      },
+    });
     expect(
       useCandidatesStore
         .getState()
@@ -124,6 +148,15 @@ describe('useCandidatesStore updateCandidateStatus', () => {
     );
 
     expect(
+      useCandidatesStore.getState().statusUpdateStateById[candidate.id],
+    ).toEqual({
+      isUpdating: false,
+      notification: {
+        message: 'Статус кандидата успешно обновлён',
+        type: 'success',
+      },
+    });
+    expect(
       useCandidatesStore
         .getState()
         .candidates.find((item) => item.id === candidate.id)?.status,
@@ -131,5 +164,30 @@ describe('useCandidatesStore updateCandidateStatus', () => {
     expect(
       useCandidatesStore.getState().candidateDetails[candidate.id]?.status,
     ).toBe('invited');
+  });
+
+  it('can clear the stored status notification for a candidate', () => {
+    const candidate = mockCandidates[0];
+
+    useCandidatesStore.setState({
+      statusUpdateStateById: {
+        [candidate.id]: {
+          isUpdating: false,
+          notification: {
+            message: 'Статус кандидата успешно обновлён',
+            type: 'success',
+          },
+        },
+      },
+    });
+
+    useCandidatesStore.getState().clearStatusUpdateNotification(candidate.id);
+
+    expect(
+      useCandidatesStore.getState().statusUpdateStateById[candidate.id],
+    ).toEqual({
+      isUpdating: false,
+      notification: null,
+    });
   });
 });

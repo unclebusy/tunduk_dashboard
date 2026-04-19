@@ -1,16 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link, useLocation, useParams } from 'react-router';
 import CandidateDetailContacts from '../components/CandidateDetailContacts';
 import CandidateDetailEvaluation from '../components/CandidateDetailEvaluation';
 import CandidateDetailHeader from '../components/CandidateDetailHeader';
 import CandidateDetailProfile from '../components/CandidateDetailProfile';
 import { useCandidatesStore } from '../store/useCandidatesStore';
-import type { CandidateWorkflowStatus } from '../types/candidate';
-
-interface StatusNotification {
-  message: string;
-  type: 'error' | 'success';
-}
 
 function CandidateDetailPage() {
   const { candidateId } = useParams();
@@ -24,46 +18,48 @@ function CandidateDetailPage() {
   const updateCandidateStatus = useCandidatesStore(
     (state) => state.updateCandidateStatus,
   );
+  const clearStatusUpdateNotification = useCandidatesStore(
+    (state) => state.clearStatusUpdateNotification,
+  );
+  const statusUpdateState = useCandidatesStore((state) =>
+    candidateId
+      ? state.statusUpdateStateById[candidateId] ?? {
+          isUpdating: false,
+          notification: null,
+        }
+      : {
+          isUpdating: false,
+          notification: null,
+        },
+  );
   const backToCandidatesPath = `/candidates${search}`;
-  const [isStatusUpdating, setIsStatusUpdating] = useState(false);
-  const [statusNotification, setStatusNotification] =
-    useState<StatusNotification | null>(null);
-
-  async function handleStatusChange(status: CandidateWorkflowStatus) {
-    if (!candidate || candidate.status === status) {
-      return;
-    }
-
-    setIsStatusUpdating(true);
-    setStatusNotification(null);
-
-    try {
-      await updateCandidateStatus(candidate.id, status);
-      setStatusNotification({
-        message: 'Статус кандидата успешно обновлён',
-        type: 'success',
-      });
-    } catch (error) {
-      setStatusNotification({
-        message:
-          error instanceof Error
-            ? error.message
-            : 'Не удалось обновить статус кандидата',
-        type: 'error',
-      });
-    } finally {
-      setIsStatusUpdating(false);
-    }
-  }
 
   useEffect(() => {
     if (!candidateId) {
       return;
     }
 
-    setStatusNotification(null);
+    clearStatusUpdateNotification(candidateId);
     void loadCandidateById(candidateId);
-  }, [candidateId, loadCandidateById]);
+  }, [candidateId, clearStatusUpdateNotification, loadCandidateById]);
+
+  useEffect(() => {
+    if (!candidateId || !statusUpdateState.notification) {
+      return;
+    }
+
+    const timeoutId = globalThis.setTimeout(() => {
+      clearStatusUpdateNotification(candidateId);
+    }, 3000);
+
+    return () => {
+      globalThis.clearTimeout(timeoutId);
+    };
+  }, [
+    candidateId,
+    clearStatusUpdateNotification,
+    statusUpdateState.notification,
+  ]);
 
   if (isLoading && !candidate) {
     return (
@@ -106,25 +102,27 @@ function CandidateDetailPage() {
 
   return (
     <div className="space-y-6">
-      {statusNotification ? (
+      {statusUpdateState.notification ? (
         <section
           className={[
             'rounded-2xl border p-4 shadow-sm',
-            statusNotification.type === 'success'
+            statusUpdateState.notification.type === 'success'
               ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
               : 'border-rose-200 bg-rose-50 text-rose-800',
           ].join(' ')}
           aria-live="polite"
         >
-          <p className="text-sm font-medium">{statusNotification.message}</p>
+          <p className="text-sm font-medium">
+            {statusUpdateState.notification.message}
+          </p>
         </section>
       ) : null}
 
       <CandidateDetailHeader
         backTo={backToCandidatesPath}
         candidate={candidate}
-        isStatusUpdating={isStatusUpdating}
-        onStatusChange={handleStatusChange}
+        isStatusUpdating={statusUpdateState.isUpdating}
+        onStatusChange={(status) => updateCandidateStatus(candidate.id, status)}
       />
       <CandidateDetailContacts candidate={candidate} />
       <CandidateDetailProfile candidate={candidate} />
