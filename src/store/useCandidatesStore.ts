@@ -10,6 +10,7 @@ import type { Candidate, CandidateWorkflowStatus } from '../types/candidate';
 interface CandidatesStoreState {
   candidates: Candidate[];
   candidateDetails: Record<string, Candidate>;
+  statusUpdateRequestIds: Record<string, number>;
   isCandidatesLoading: boolean;
   candidatesError: string | null;
   isCandidateDetailLoading: boolean;
@@ -61,6 +62,7 @@ function upsertCandidate(
 export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
   candidates: [],
   candidateDetails: {},
+  statusUpdateRequestIds: {},
   isCandidatesLoading: false,
   candidatesError: null,
   isCandidateDetailLoading: false,
@@ -148,8 +150,13 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
       ...existingCandidate,
       status,
     };
+    const requestId = (state.statusUpdateRequestIds[candidateId] ?? 0) + 1;
 
     set((currentState) => ({
+      statusUpdateRequestIds: {
+        ...currentState.statusUpdateRequestIds,
+        [candidateId]: requestId,
+      },
       candidates: upsertCandidate(currentState.candidates, optimisticCandidate),
       candidateDetails: {
         ...currentState.candidateDetails,
@@ -164,23 +171,35 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
         options,
       );
 
-      set((currentState) => ({
-        candidates: upsertCandidate(currentState.candidates, updatedCandidate),
-        candidateDetails: {
-          ...currentState.candidateDetails,
-          [updatedCandidate.id]: updatedCandidate,
-        },
-      }));
+      set((currentState) => {
+        if (currentState.statusUpdateRequestIds[candidateId] !== requestId) {
+          return currentState;
+        }
+
+        return {
+          candidates: upsertCandidate(currentState.candidates, updatedCandidate),
+          candidateDetails: {
+            ...currentState.candidateDetails,
+            [updatedCandidate.id]: updatedCandidate,
+          },
+        };
+      });
 
       return updatedCandidate;
     } catch (error) {
-      set((currentState) => ({
-        candidates: upsertCandidate(currentState.candidates, existingCandidate),
-        candidateDetails: {
-          ...currentState.candidateDetails,
-          [existingCandidate.id]: existingCandidate,
-        },
-      }));
+      set((currentState) => {
+        if (currentState.statusUpdateRequestIds[candidateId] !== requestId) {
+          return currentState;
+        }
+
+        return {
+          candidates: upsertCandidate(currentState.candidates, existingCandidate),
+          candidateDetails: {
+            ...currentState.candidateDetails,
+            [existingCandidate.id]: existingCandidate,
+          },
+        };
+      });
 
       throw error;
     }
