@@ -6,7 +6,6 @@ import {
   getVerdictLabel,
 } from './candidateDetailStyles';
 import {
-  getCandidateWorkflowStatusClassName,
   getCandidateWorkflowStatusLabel,
   getCandidateWorkflowStatusTextClassName,
 } from '../utils/candidateWorkflowStatus';

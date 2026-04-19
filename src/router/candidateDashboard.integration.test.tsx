@@ -103,9 +103,7 @@ describe('Candidate Dashboard integration', () => {
 
     expect(router.state.location.pathname).toBe('/candidate/ivanov');
     expect(
-      await screen.findByText(
-        /Фронтенд-разработчик с опытом React 3\.5 года\./i,
-      ),
+      await screen.findByRole('heading', { name: /сильные стороны/i }),
     ).toBeTruthy();
     expect(
       screen.getByRole('combobox', { name: /статус воронки/i }),
@@ -131,8 +129,8 @@ describe('Candidate Dashboard integration', () => {
     expect(
       await screen.findByText(/по текущим фильтрам кандидаты не найдены/i),
     ).toBeTruthy();
-    expect(screen.getByText(/^0 кандидатов$/i)).toBeTruthy();
-    expect(screen.getByText(/на текущей странице показано 0/i)).toBeTruthy();
+    expect(screen.getByText(/^Кандидатов:$/i)).toBeTruthy();
+    expect(screen.getByText(/^0$/)).toBeTruthy();
   });
 
   it('shows an error state when candidate loading fails', async () => {
