@@ -216,4 +216,43 @@ describe('Candidate Dashboard integration', () => {
     expect(candidateCard).toBeTruthy();
     expect(within(candidateCard as HTMLElement).getByText('Новый')).toBeTruthy();
   });
+
+  it('renders safe fallback values for missing candidate fields', async () => {
+    const candidateWithMissingFields = {
+      ...mockCandidates[0],
+      city: null,
+      phone: null,
+      email: null,
+      tg: null,
+      file: null,
+    };
+
+    vi.mocked(candidatesApi.getCandidates).mockResolvedValue([
+      candidateWithMissingFields,
+    ]);
+    vi.mocked(candidatesApi.getCandidateById).mockResolvedValue(
+      candidateWithMissingFields,
+    );
+
+    const { user } = renderCandidateDashboard(['/candidates']);
+
+    const candidateLink = await screen.findByRole('link', {
+      name: /Иванов Иван Иванович/i,
+    });
+    const candidateCard = candidateLink.closest('article');
+
+    expect(candidateCard).toBeTruthy();
+    expect(
+      within(candidateCard as HTMLElement).getByText('Не указан'),
+    ).toBeTruthy();
+
+    await user.click(candidateLink);
+
+    expect((await screen.findAllByText('Не указан')).length).toBeGreaterThan(1);
+    expect(screen.getByText('Файл не приложен')).toBeTruthy();
+    expect(screen.getByText('Недоступен')).toBeTruthy();
+    expect(screen.queryByRole('link', { name: /\+7/i })).toBeNull();
+    expect(screen.queryByRole('link', { name: /@ivanov_dev/i })).toBeNull();
+    expect(screen.queryByRole('link', { name: /ivanov@email.com/i })).toBeNull();
+  });
 });
