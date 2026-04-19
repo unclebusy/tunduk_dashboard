@@ -34,7 +34,7 @@ const datasetMap: Record<CandidatesMockDataset, Candidate[]> = {
   large: mockCandidatesLarge,
 };
 
-let currentDataset: CandidatesMockDataset = 'large';
+let currentDataset: CandidatesMockDataset = 'default';
 let candidatesDb: Candidate[] = cloneCandidates(datasetMap[currentDataset]);
 
 export function setCandidatesMockDataset(dataset: CandidatesMockDataset) {

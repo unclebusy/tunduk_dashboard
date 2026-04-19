@@ -28,6 +28,7 @@ jest.mock('../services/candidatesApi', () => ({
   getCandidateById: jest.fn(async (candidateId: string) => {
     return mockCandidates.find((candidate) => candidate.id === candidateId) ?? null;
   }),
+  setCandidatesMockDataset: jest.fn(),
   updateCandidateStatus: jest.fn(async (candidateId: string, status: string) => {
     const candidate = mockCandidates.find((item) => item.id === candidateId);
 

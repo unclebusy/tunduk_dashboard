@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
+import CandidateCard from '../components/CandidateCard';
 import VirtualizedCandidateList from '../components/VirtualizedCandidateList';
 import { useDebounce } from '../hooks/useDebounce';
 import type {
@@ -41,6 +42,7 @@ function CandidatesListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [reloadKey, setReloadKey] = useState(0);
   const candidates = useCandidatesStore((state) => state.candidates);
+  const dataset = useCandidatesStore((state) => state.dataset);
   const isLoading = useCandidatesStore((state) => state.isCandidatesLoading);
   const errorMessage = useCandidatesStore((state) => state.candidatesError);
   const loadCandidates = useCandidatesStore((state) => state.loadCandidates);
@@ -331,7 +333,13 @@ function CandidatesListPage() {
 
       <section className="space-y-3">
         {totalVisibleCandidates > 0 ? (
-          <VirtualizedCandidateList candidates={paginatedCandidates} />
+          dataset === 'large' ? (
+            <VirtualizedCandidateList candidates={paginatedCandidates} />
+          ) : (
+            paginatedCandidates.map((candidate) => (
+              <CandidateCard key={candidate.id} candidate={candidate} />
+            ))
+          )
         ) : (
           <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-600 shadow-sm">
             По текущим фильтрам кандидаты не найдены

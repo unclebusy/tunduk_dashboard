@@ -6,6 +6,7 @@ import * as candidatesApi from '../services/candidatesApi';
 jest.mock('../services/candidatesApi', () => ({
   getCandidates: jest.fn(),
   getCandidateById: jest.fn(),
+  setCandidatesMockDataset: jest.fn(),
   updateCandidateStatus: jest.fn(),
 }));
 

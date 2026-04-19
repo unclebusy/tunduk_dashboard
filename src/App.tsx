@@ -1,15 +1,29 @@
 import './styles.css';
-import { Link, Outlet, useLocation } from 'react-router';
+import { useEffect } from 'react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { Toaster } from 'sonner';
 import logo from './assets/logo.svg';
+import { useCandidatesStore } from './store/useCandidatesStore';
 
 function App() {
   const { pathname, search } = useLocation();
+  const navigate = useNavigate();
   const isCandidateDetailPage = pathname.startsWith('/candidate/');
+  const dataset = useCandidatesStore((state) => state.dataset);
+  const setCandidatesDataset = useCandidatesStore(
+    (state) => state.setCandidatesDataset,
+  );
+  const isDatasetLoading = useCandidatesStore((state) => state.isCandidatesLoading);
   const candidatesLink = {
     pathname: '/candidates',
     search,
   };
+
+  useEffect(() => {
+    void setCandidatesDataset(dataset);
+  }, [dataset, setCandidatesDataset]);
+
+  const isLargeDataset = dataset === 'large';
 
   return (
     <div className="min-h-screen bg-[--color-page] text-slate-900">
@@ -31,20 +45,55 @@ function App() {
             </p>
           </div>
 
-          {isCandidateDetailPage ? (
-            <nav className="flex items-center gap-2 self-start sm:self-auto">
-              <Link
-                to={candidatesLink}
-                className="cursor-pointer rounded-lg bg-[#1560BD] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0f4a92]"
+          <div className="flex flex-col items-start gap-2 self-start sm:items-end sm:self-auto">
+            {isCandidateDetailPage ? (
+              <nav className="flex items-center gap-2">
+                <Link
+                  to={candidatesLink}
+                  className="cursor-pointer rounded-lg bg-[#1560BD] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0f4a92]"
+                >
+                  ← Кандидаты
+                </Link>
+              </nav>
+            ) : (
+              <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600">
+                Раздел: Кандидаты
+              </div>
+            )}
+
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isLargeDataset}
+              disabled={isDatasetLoading}
+              onClick={() => {
+                const nextDataset = isLargeDataset ? 'default' : 'large';
+                void setCandidatesDataset(nextDataset).then(() => {
+                  if (pathname !== '/candidates') {
+                    navigate(candidatesLink);
+                  }
+                });
+              }}
+              className="flex cursor-pointer items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <span className="text-xs font-medium uppercase tracking-[0.08em] text-slate-500">
+                Большой список
+              </span>
+              <span
+                className={[
+                  'relative h-5 w-10 rounded-full transition-colors',
+                  isLargeDataset ? 'bg-[#1560BD]' : 'bg-slate-300',
+                ].join(' ')}
               >
-                ← Кандидаты
-              </Link>
-            </nav>
-          ) : (
-            <div className="self-start rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 sm:self-auto">
-              Раздел: Кандидаты
-            </div>
-          )}
+                <span
+                  className={[
+                    'absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform',
+                    isLargeDataset ? 'translate-x-5' : 'translate-x-0.5',
+                  ].join(' ')}
+                />
+              </span>
+            </button>
+          </div>
         </header>
 
         <main className="flex-1">

@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import {
+  type CandidatesMockDataset,
   getCandidateById,
   getCandidates,
+  setCandidatesMockDataset,
   type UpdateCandidateStatusOptions,
   updateCandidateStatus,
 } from '../services/candidatesApi';
@@ -20,6 +22,7 @@ export interface CandidateStatusUpdateState {
 interface CandidatesStoreState {
   candidates: Candidate[];
   candidateDetails: Record<string, Candidate>;
+  dataset: CandidatesMockDataset;
   statusUpdateRequestIds: Record<string, number>;
   statusUpdateStateById: Record<string, CandidateStatusUpdateState>;
   isCandidatesLoading: boolean;
@@ -32,6 +35,7 @@ interface CandidatesStoreState {
 interface CandidatesStoreActions {
   loadCandidates: (force?: boolean) => Promise<void>;
   loadCandidateById: (candidateId: string) => Promise<Candidate | null>;
+  setCandidatesDataset: (dataset: CandidatesMockDataset) => Promise<void>;
   updateCandidateStatus: (
     candidateId: string,
     status: CandidateWorkflowStatus,
@@ -81,6 +85,7 @@ function getInitialCandidateStatusUpdateState(): CandidateStatusUpdateState {
 export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
   candidates: [],
   candidateDetails: {},
+  dataset: 'default',
   statusUpdateRequestIds: {},
   statusUpdateStateById: {},
   isCandidatesLoading: false,
@@ -154,6 +159,28 @@ export const useCandidatesStore = create<CandidatesStore>()((set, get) => ({
 
       return null;
     }
+  },
+
+  async setCandidatesDataset(dataset) {
+    setCandidatesMockDataset(dataset);
+
+    if (get().dataset === dataset) {
+      return;
+    }
+
+    set({
+      dataset,
+      candidates: [],
+      candidateDetails: {},
+      statusUpdateRequestIds: {},
+      statusUpdateStateById: {},
+      hasLoadedCandidates: false,
+      candidatesError: null,
+      candidateDetailError: null,
+      isCandidateDetailLoading: false,
+    });
+
+    await get().loadCandidates(true);
   },
 
   async updateCandidateStatus(candidateId, status, options) {
