@@ -122,7 +122,9 @@ function CandidateDetailPage() {
         backTo={backToCandidatesPath}
         candidate={candidate}
         isStatusUpdating={statusUpdateState.isUpdating}
-        onStatusChange={(status) => updateCandidateStatus(candidate.id, status)}
+        onStatusChange={(status) => {
+          void updateCandidateStatus(candidate.id, status).catch(() => undefined);
+        }}
       />
       <CandidateDetailContacts candidate={candidate} />
       <CandidateDetailProfile candidate={candidate} />

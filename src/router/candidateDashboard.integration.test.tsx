@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   createMemoryRouter,
@@ -146,5 +146,74 @@ describe('Candidate Dashboard integration', () => {
     expect(
       screen.getByRole('button', { name: /повторить/i }),
     ).toBeTruthy();
+  });
+
+  it('updates candidate status on the detail page and reflects it in the list', async () => {
+    const { user } = renderCandidateDashboard(['/candidates']);
+
+    const candidateLink = await screen.findByRole('link', {
+      name: /Иванов Иван Иванович/i,
+    });
+
+    await user.click(candidateLink);
+
+    const workflowStatusSelect = await screen.findByRole('combobox', {
+      name: /статус воронки/i,
+    });
+
+    await user.selectOptions(workflowStatusSelect, 'invited');
+
+    expect(
+      await screen.findByText(/статус кандидата успешно обновлён/i),
+    ).toBeTruthy();
+    expect((workflowStatusSelect as HTMLSelectElement).value).toBe('invited');
+
+    await user.click(screen.getByRole('link', { name: /назад к списку/i }));
+
+    const updatedCandidateLink = await screen.findByRole('link', {
+      name: /Иванов Иван Иванович/i,
+    });
+    const candidateCard = updatedCandidateLink.closest('article');
+
+    expect(candidateCard).toBeTruthy();
+    expect(within(candidateCard as HTMLElement).getByText('Приглашён')).toBeTruthy();
+  });
+
+  it('rolls back the optimistic status when the update request fails', async () => {
+    vi.mocked(candidatesApi.updateCandidateStatus).mockRejectedValueOnce(
+      new Error('Failed to update candidate status'),
+    );
+
+    const { user } = renderCandidateDashboard(['/candidates']);
+
+    const candidateLink = await screen.findByRole('link', {
+      name: /Иванов Иван Иванович/i,
+    });
+
+    await user.click(candidateLink);
+
+    const workflowStatusSelect = await screen.findByRole('combobox', {
+      name: /статус воронки/i,
+    });
+
+    await user.selectOptions(workflowStatusSelect, 'review');
+
+    expect(
+      await screen.findByText(/failed to update candidate status/i),
+    ).toBeTruthy();
+
+    await waitFor(() => {
+      expect((workflowStatusSelect as HTMLSelectElement).value).toBe('new');
+    });
+
+    await user.click(screen.getByRole('link', { name: /назад к списку/i }));
+
+    const rolledBackCandidateLink = await screen.findByRole('link', {
+      name: /Иванов Иван Иванович/i,
+    });
+    const candidateCard = rolledBackCandidateLink.closest('article');
+
+    expect(candidateCard).toBeTruthy();
+    expect(within(candidateCard as HTMLElement).getByText('Новый')).toBeTruthy();
   });
 });
