@@ -28,6 +28,7 @@ function CandidateRow({
         ...style,
         top: Number(style.top ?? 0) + CANDIDATE_ROW_GAP / 2,
         height: Number(style.height ?? CANDIDATE_ROW_HEIGHT) - CANDIDATE_ROW_GAP,
+        paddingRight: 8,
       }}
     >
       <CandidateCard candidate={candidate} />
@@ -49,7 +50,7 @@ function VirtualizedCandidateList({
   candidates,
 }: VirtualizedCandidateListProps) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50/40 p-2 shadow-sm">
+    <div className="candidate-list-shell rounded-xl border border-slate-200 bg-slate-50/40 p-2 shadow-sm">
       <List
         rowComponent={CandidateRow}
         rowCount={candidates.length}
@@ -58,7 +59,7 @@ function VirtualizedCandidateList({
         defaultHeight={getListHeight(candidates.length)}
         style={{ height: getListHeight(candidates.length), width: '100%' }}
         overscanCount={2}
-        className="scrollbar-thin"
+        className="candidate-list-scrollbar"
       />
     </div>
   );
