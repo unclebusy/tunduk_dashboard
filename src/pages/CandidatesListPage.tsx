@@ -4,7 +4,6 @@ import CandidateCard from '../components/CandidateCard';
 import { useDebounce } from '../hooks/useDebounce';
 import type {
   CandidateSortField,
-  CandidateSortOrder,
   CandidateVerdict,
 } from '../types/candidate';
 import { useCandidatesStore } from '../store/useCandidatesStore';
@@ -13,8 +12,8 @@ import {
   CANDIDATES_PAGE_SIZE,
 } from '../utils/candidateListView';
 import {
-  getDefaultSortOrder,
   parseCandidateListQueryParams,
+  reduceCandidateListQueryParams,
   serializeCandidateListQueryParams,
 } from '../utils/candidateListQueryParams';
 
@@ -59,58 +58,44 @@ function CandidatesListPage() {
       [candidates, queryParams],
     );
 
-  const updateQueryParams = useCallback((
-    nextQueryParams: Partial<typeof queryParams>,
+  const applyQueryAction = useCallback((
+    action: Parameters<typeof reduceCandidateListQueryParams>[1],
     replace = false,
   ) => {
     setSearchParams(
-      serializeCandidateListQueryParams({
-        ...queryParams,
-        ...nextQueryParams,
-      }),
+      serializeCandidateListQueryParams(
+        reduceCandidateListQueryParams(queryParams, action),
+      ),
       { replace },
     );
   }, [queryParams, setSearchParams]);
 
   const handleVerdictChange = useCallback((nextVerdict?: CandidateVerdict) => {
-    updateQueryParams({ verdict: nextVerdict, page: 1 });
-  }, [updateQueryParams]);
+    applyQueryAction({ type: 'setVerdict', verdict: nextVerdict });
+  }, [applyQueryAction]);
 
   const handleSearchChange = useCallback((nextSearch: string) => {
-    updateQueryParams({ search: nextSearch, page: 1 });
-  }, [updateQueryParams]);
+    applyQueryAction({ type: 'setSearch', search: nextSearch });
+  }, [applyQueryAction]);
 
   const handleSortChange = useCallback((nextSort?: CandidateSortField) => {
-    updateQueryParams({
-      sort: nextSort,
-      order: getDefaultSortOrder(nextSort),
-      page: 1,
-    });
-  }, [updateQueryParams]);
+    applyQueryAction({ type: 'setSort', sort: nextSort });
+  }, [applyQueryAction]);
 
   const handleSortOrderToggle = useCallback(() => {
-    if (!queryParams.sort) {
-      return;
-    }
-
-    const nextOrder: CandidateSortOrder =
-      queryParams.order === 'asc' ? 'desc' : 'asc';
-
-    updateQueryParams({ order: nextOrder, page: 1 });
-  }, [queryParams.order, queryParams.sort, updateQueryParams]);
+    applyQueryAction({ type: 'toggleOrder' });
+  }, [applyQueryAction]);
 
   const handlePageChange = useCallback((nextPage: number) => {
-    updateQueryParams({ page: nextPage });
-  }, [updateQueryParams]);
+    applyQueryAction({ type: 'setPage', page: nextPage });
+  }, [applyQueryAction]);
 
   const handleResetFilters = useCallback(() => {
     setSearchInputValue('');
-    setSearchParams(
-      serializeCandidateListQueryParams({
-        page: 1,
-      }),
-    );
-  }, [setSearchParams]);
+    setSearchParams(serializeCandidateListQueryParams(
+      reduceCandidateListQueryParams(queryParams, { type: 'reset' }),
+    ));
+  }, [queryParams, setSearchParams]);
 
   const hasActiveFilters =
     Boolean(queryParams.search) ||
@@ -121,6 +106,7 @@ function CandidatesListPage() {
     queryParams.search,
     queryParams.verdict,
     queryParams.sort,
+    queryParams.sort ? queryParams.order : undefined,
     queryParams.page > 1 ? String(queryParams.page) : undefined,
   ].filter(Boolean).length;
   const visibleRangeStart =
@@ -149,8 +135,8 @@ function CandidatesListPage() {
       return;
     }
 
-    updateQueryParams({ page: currentPage }, true);
-  }, [currentPage, queryParams.page, updateQueryParams]);
+    applyQueryAction({ type: 'setPage', page: currentPage }, true);
+  }, [applyQueryAction, currentPage, queryParams.page]);
 
   useEffect(() => {
     void loadCandidates(reloadKey > 0);

@@ -23,6 +23,14 @@ const candidateSortFields: CandidateSortField[] = [
 
 const candidateSortOrders: CandidateSortOrder[] = ['asc', 'desc'];
 
+export type CandidateListQueryAction =
+  | { type: 'setVerdict'; verdict?: CandidateVerdict }
+  | { type: 'setSearch'; search?: string }
+  | { type: 'setSort'; sort?: CandidateSortField }
+  | { type: 'toggleOrder' }
+  | { type: 'setPage'; page: number }
+  | { type: 'reset' };
+
 function isCandidateVerdict(value: string): value is CandidateVerdict {
   return candidateVerdicts.includes(value as CandidateVerdict);
 }
@@ -127,4 +135,50 @@ export function serializeCandidateListQueryParams(
   }
 
   return searchParams;
+}
+
+export function reduceCandidateListQueryParams(
+  currentParams: CandidateListQueryParams,
+  action: CandidateListQueryAction,
+): CandidateListQueryParams {
+  switch (action.type) {
+    case 'setVerdict':
+      return {
+        ...currentParams,
+        verdict: action.verdict,
+        page: DEFAULT_PAGE,
+      };
+    case 'setSearch':
+      return {
+        ...currentParams,
+        search: normalizeSearch(action.search ?? null),
+        page: DEFAULT_PAGE,
+      };
+    case 'setSort':
+      return {
+        ...currentParams,
+        sort: action.sort,
+        order: getDefaultSortOrder(action.sort),
+        page: DEFAULT_PAGE,
+      };
+    case 'toggleOrder':
+      if (!currentParams.sort) {
+        return currentParams;
+      }
+
+      return {
+        ...currentParams,
+        order: currentParams.order === 'asc' ? 'desc' : 'asc',
+        page: DEFAULT_PAGE,
+      };
+    case 'setPage':
+      return {
+        ...currentParams,
+        page: action.page < DEFAULT_PAGE ? DEFAULT_PAGE : action.page,
+      };
+    case 'reset':
+      return {
+        page: DEFAULT_PAGE,
+      };
+  }
 }

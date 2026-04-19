@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   parseCandidateListQueryParams,
+  reduceCandidateListQueryParams,
   serializeCandidateListQueryParams,
 } from './candidateListQueryParams';
 
@@ -60,5 +61,55 @@ describe('candidateListQueryParams', () => {
 
     expect(parsedParams.sort).toBe('totalExp');
     expect(parsedParams.order).toBe('desc');
+  });
+
+  it('resets page and default order when sort changes through the reducer', () => {
+    const nextParams = reduceCandidateListQueryParams(
+      {
+        verdict: 'ЧАСТИЧНО',
+        search: 'Ivan',
+        sort: 'name',
+        order: 'asc',
+        page: 4,
+      },
+      { type: 'setSort', sort: 'createdAt' },
+    );
+
+    expect(nextParams).toEqual({
+      verdict: 'ЧАСТИЧНО',
+      search: 'Ivan',
+      sort: 'createdAt',
+      order: 'desc',
+      page: 1,
+    });
+  });
+
+  it('keeps current params unchanged when toggling order without an active sort', () => {
+    const currentParams = {
+      verdict: undefined,
+      search: undefined,
+      sort: undefined,
+      order: undefined,
+      page: 1,
+    } as const;
+
+    expect(
+      reduceCandidateListQueryParams(currentParams, { type: 'toggleOrder' }),
+    ).toEqual(currentParams);
+  });
+
+  it('resets all filter params back to the default state', () => {
+    const nextParams = reduceCandidateListQueryParams(
+      {
+        verdict: 'ПОДХОДИТ',
+        search: 'Anna',
+        sort: 'status',
+        order: 'asc',
+        page: 3,
+      },
+      { type: 'reset' },
+    );
+
+    expect(nextParams).toEqual({ page: 1 });
   });
 });
