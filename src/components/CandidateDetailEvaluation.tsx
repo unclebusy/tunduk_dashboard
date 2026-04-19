@@ -12,7 +12,7 @@ function splitCriterionDescription(description: string): {
   title: string;
   evidence: string;
 } {
-  const [title, evidence] = description.split('—').map((item) => item.trim());
+  const [title, evidence] = description.split(' - ').map((item) => item.trim());
 
   return {
     title: title || description,

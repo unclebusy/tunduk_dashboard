@@ -78,7 +78,7 @@ function getStackGroups(candidate: Candidate): {
   const secondary = stackItems.slice(4);
   const unconfirmed = candidate.criteria
     .filter(([status]) => status !== 'ok')
-    .map(([, description]) => description.split('—')[0]?.trim() ?? '')
+    .map(([, description]) => description.split(' - ')[0]?.trim() ?? '')
     .filter(Boolean);
 
   return { primary, secondary, unconfirmed };
