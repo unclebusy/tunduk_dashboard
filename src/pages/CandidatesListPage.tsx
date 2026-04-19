@@ -202,7 +202,7 @@ function CandidatesListPage() {
             </p>
           </div>
 
-          <div className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3 lg:min-w-[51rem] lg:grid-cols-[minmax(0,1fr)_11rem_11rem_9rem_auto]">
+          <div className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3 lg:min-w-204 lg:grid-cols-[minmax(0,1fr)_11rem_11rem_9rem_auto]">
             <label className="block min-w-0">
               <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
                 Поиск по ФИО
