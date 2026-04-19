@@ -1,5 +1,6 @@
 import type {
   CandidateListQueryParams,
+  CandidateSortOrder,
   CandidateSortField,
   CandidateVerdict,
 } from '../types/candidate';
@@ -20,12 +21,34 @@ const candidateSortFields: CandidateSortField[] = [
   'status',
 ];
 
+const candidateSortOrders: CandidateSortOrder[] = ['asc', 'desc'];
+
 function isCandidateVerdict(value: string): value is CandidateVerdict {
   return candidateVerdicts.includes(value as CandidateVerdict);
 }
 
 function isCandidateSortField(value: string): value is CandidateSortField {
   return candidateSortFields.includes(value as CandidateSortField);
+}
+
+function isCandidateSortOrder(value: string): value is CandidateSortOrder {
+  return candidateSortOrders.includes(value as CandidateSortOrder);
+}
+
+export function getDefaultSortOrder(
+  sortField?: CandidateSortField,
+): CandidateSortOrder | undefined {
+  switch (sortField) {
+    case 'name':
+      return 'asc';
+    case 'createdAt':
+    case 'totalExp':
+    case 'verdict':
+    case 'status':
+      return 'desc';
+    default:
+      return undefined;
+  }
 }
 
 function normalizePage(value: string | null): number {
@@ -56,6 +79,8 @@ export function parseCandidateListQueryParams(
 
   const verdictValue = searchParams.get('verdict');
   const sortValue = searchParams.get('sort');
+  const sort = sortValue && isCandidateSortField(sortValue) ? sortValue : undefined;
+  const orderValue = searchParams.get('order');
 
   return {
     verdict:
@@ -63,7 +88,11 @@ export function parseCandidateListQueryParams(
         ? verdictValue
         : undefined,
     search: normalizeSearch(searchParams.get('search')),
-    sort: sortValue && isCandidateSortField(sortValue) ? sortValue : undefined,
+    sort,
+    order:
+      sort && orderValue && isCandidateSortOrder(orderValue)
+        ? orderValue
+        : getDefaultSortOrder(sort),
     page: normalizePage(searchParams.get('page')),
   };
 }
@@ -83,6 +112,12 @@ export function serializeCandidateListQueryParams(
 
   if (params.sort) {
     searchParams.set('sort', params.sort);
+
+    const order = params.order ?? getDefaultSortOrder(params.sort);
+
+    if (order) {
+      searchParams.set('order', order);
+    }
   }
 
   const page = params.page ?? DEFAULT_PAGE;

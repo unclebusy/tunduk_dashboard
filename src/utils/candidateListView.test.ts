@@ -26,6 +26,7 @@ describe('candidateListView', () => {
       page: 999,
       search: undefined,
       sort: undefined,
+      order: undefined,
       verdict: undefined,
     });
 
@@ -39,6 +40,7 @@ describe('candidateListView', () => {
       page: 1,
       search: undefined,
       sort: 'createdAt',
+      order: 'desc',
       verdict: undefined,
     });
 
@@ -51,6 +53,7 @@ describe('candidateListView', () => {
       page: 1,
       search: undefined,
       sort: 'totalExp',
+      order: 'desc',
       verdict: undefined,
     });
 
@@ -59,5 +62,19 @@ describe('candidateListView', () => {
       '~7.5 г.',
       '~7.5 г.',
     ]);
+  });
+
+  it('sorts by name ascending when order is asc', () => {
+    const viewData = getCandidateListViewData(mockCandidates, {
+      page: 1,
+      search: undefined,
+      sort: 'name',
+      order: 'asc',
+      verdict: undefined,
+    });
+
+    expect(viewData.paginatedCandidates[0]?.name).toBe(
+      'Абдрахманов Бакыт Асанович',
+    );
   });
 });

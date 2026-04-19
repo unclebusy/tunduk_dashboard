@@ -19,30 +19,37 @@ function parseTotalExperience(value: string): number {
 export function sortCandidates(
   candidates: Candidate[],
   sortField: CandidateListQueryParams['sort'],
+  sortOrder: CandidateListQueryParams['order'],
 ): Candidate[] {
   if (!sortField) {
     return candidates;
   }
 
+  const direction = sortOrder === 'asc' ? 1 : -1;
+
   return [...candidates].sort((leftCandidate, rightCandidate) => {
-    switch (sortField) {
-      case 'name':
-        return leftCandidate.name.localeCompare(rightCandidate.name);
-      case 'totalExp':
-        return (
-          parseTotalExperience(rightCandidate.total_exp) -
-          parseTotalExperience(leftCandidate.total_exp)
-        );
-      case 'verdict':
-        return leftCandidate.verdict.localeCompare(rightCandidate.verdict);
-      case 'status':
-        return leftCandidate.status.localeCompare(rightCandidate.status);
-      case 'createdAt':
-        return (
-          new Date(rightCandidate.createdAt).getTime() -
-          new Date(leftCandidate.createdAt).getTime()
-        );
-    }
+    const comparison = (() => {
+      switch (sortField) {
+        case 'name':
+          return leftCandidate.name.localeCompare(rightCandidate.name);
+        case 'totalExp':
+          return (
+            parseTotalExperience(leftCandidate.total_exp) -
+            parseTotalExperience(rightCandidate.total_exp)
+          );
+        case 'verdict':
+          return leftCandidate.verdict.localeCompare(rightCandidate.verdict);
+        case 'status':
+          return leftCandidate.status.localeCompare(rightCandidate.status);
+        case 'createdAt':
+          return (
+            new Date(leftCandidate.createdAt).getTime() -
+            new Date(rightCandidate.createdAt).getTime()
+          );
+      }
+    })();
+
+    return comparison * direction;
   });
 }
 
@@ -69,7 +76,11 @@ export function getCandidateListViewData(
   queryParams: CandidateListQueryParams,
 ): CandidateListViewData {
   const filteredCandidates = filterCandidates(candidates, queryParams);
-  const sortedCandidates = sortCandidates(filteredCandidates, queryParams.sort);
+  const sortedCandidates = sortCandidates(
+    filteredCandidates,
+    queryParams.sort,
+    queryParams.order,
+  );
   const totalPages = Math.max(
     1,
     Math.ceil(sortedCandidates.length / CANDIDATES_PAGE_SIZE),

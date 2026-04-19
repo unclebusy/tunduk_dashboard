@@ -7,13 +7,14 @@ import {
 describe('candidateListQueryParams', () => {
   it('parses supported query params into typed values', () => {
     const parsedParams = parseCandidateListQueryParams(
-      'verdict=%D0%9F%D0%9E%D0%94%D0%A5%D0%9E%D0%94%D0%98%D0%A2&search=%20Anna%20&sort=name&page=3',
+      'verdict=%D0%9F%D0%9E%D0%94%D0%A5%D0%9E%D0%94%D0%98%D0%A2&search=%20Anna%20&sort=name&order=desc&page=3',
     );
 
     expect(parsedParams).toEqual({
       verdict: 'ПОДХОДИТ',
       search: 'Anna',
       sort: 'name',
+      order: 'desc',
       page: 3,
     });
   });
@@ -27,6 +28,7 @@ describe('candidateListQueryParams', () => {
       verdict: undefined,
       search: undefined,
       sort: undefined,
+      order: undefined,
       page: 1,
     });
   });
@@ -36,11 +38,12 @@ describe('candidateListQueryParams', () => {
       verdict: 'ЧАСТИЧНО',
       search: '  Ivan  ',
       sort: 'status',
+      order: 'asc',
       page: 1,
     });
 
     expect(searchParams.toString()).toBe(
-      'verdict=%D0%A7%D0%90%D0%A1%D0%A2%D0%98%D0%A7%D0%9D%D0%9E&search=Ivan&sort=status',
+      'verdict=%D0%A7%D0%90%D0%A1%D0%A2%D0%98%D0%A7%D0%9D%D0%9E&search=Ivan&sort=status&order=asc',
     );
   });
 
@@ -56,5 +59,6 @@ describe('candidateListQueryParams', () => {
     const parsedParams = parseCandidateListQueryParams('sort=totalExp');
 
     expect(parsedParams.sort).toBe('totalExp');
+    expect(parsedParams.order).toBe('desc');
   });
 });

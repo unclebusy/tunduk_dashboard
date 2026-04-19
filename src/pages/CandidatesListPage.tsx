@@ -2,13 +2,18 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import CandidateCard from '../components/CandidateCard';
 import { useDebounce } from '../hooks/useDebounce';
-import type { CandidateSortField, CandidateVerdict } from '../types/candidate';
+import type {
+  CandidateSortField,
+  CandidateSortOrder,
+  CandidateVerdict,
+} from '../types/candidate';
 import { useCandidatesStore } from '../store/useCandidatesStore';
 import {
   getCandidateListViewData,
   CANDIDATES_PAGE_SIZE,
 } from '../utils/candidateListView';
 import {
+  getDefaultSortOrder,
   parseCandidateListQueryParams,
   serializeCandidateListQueryParams,
 } from '../utils/candidateListQueryParams';
@@ -76,8 +81,23 @@ function CandidatesListPage() {
   }, [updateQueryParams]);
 
   const handleSortChange = useCallback((nextSort?: CandidateSortField) => {
-    updateQueryParams({ sort: nextSort, page: 1 });
+    updateQueryParams({
+      sort: nextSort,
+      order: getDefaultSortOrder(nextSort),
+      page: 1,
+    });
   }, [updateQueryParams]);
+
+  const handleSortOrderToggle = useCallback(() => {
+    if (!queryParams.sort) {
+      return;
+    }
+
+    const nextOrder: CandidateSortOrder =
+      queryParams.order === 'asc' ? 'desc' : 'asc';
+
+    updateQueryParams({ order: nextOrder, page: 1 });
+  }, [queryParams.order, queryParams.sort, updateQueryParams]);
 
   const handlePageChange = useCallback((nextPage: number) => {
     updateQueryParams({ page: nextPage });
@@ -194,7 +214,7 @@ function CandidatesListPage() {
             </p>
           </div>
 
-          <div className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3 lg:min-w-[42rem] lg:grid-cols-[minmax(0,1fr)_11rem_11rem_auto]">
+          <div className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3 lg:min-w-[51rem] lg:grid-cols-[minmax(0,1fr)_11rem_11rem_9rem_auto]">
             <label className="block min-w-0">
               <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
                 Поиск по ФИО
@@ -289,6 +309,25 @@ function CandidatesListPage() {
                 </span>
               </div>
             </label>
+
+            <div className="block">
+              <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
+                Направление
+              </span>
+              <button
+                type="button"
+                onClick={handleSortOrderToggle}
+                disabled={!queryParams.sort}
+                className="inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-300"
+              >
+                <span aria-hidden="true">
+                  {queryParams.order === 'asc' ? '↑' : '↓'}
+                </span>
+                <span>
+                  {queryParams.order === 'asc' ? 'Возр.' : 'Убыв.'}
+                </span>
+              </button>
+            </div>
 
             <div className="flex items-end lg:justify-end">
               <button

@@ -13,6 +13,8 @@ export type CandidateSortField =
   | 'verdict'
   | 'status';
 
+export type CandidateSortOrder = 'asc' | 'desc';
+
 export type CandidateCriterionStatus = 'ok' | 'partial' | 'no';
 
 export type CandidateExperienceItem = [
@@ -38,6 +40,7 @@ export interface CandidateListQueryParams {
   verdict?: CandidateVerdict;
   search?: string;
   sort?: CandidateSortField;
+  order?: CandidateSortOrder;
   page: number;
 }
 
