@@ -11,6 +11,13 @@ interface CandidateDetailContactsProps {
   candidate: Candidate;
 }
 
+interface ContactItem {
+  label: string;
+  href?: string;
+  value: string;
+  isExternal?: boolean;
+}
+
 function CandidateDetailContacts({
   candidate,
 }: CandidateDetailContactsProps) {
@@ -18,6 +25,24 @@ function CandidateDetailContacts({
   const telegramHref = getTelegramHref(candidate.tg);
   const emailHref = getEmailHref(candidate.email);
   const hasResumeFile = isFilledValue(candidate.file);
+  const contactItems: ContactItem[] = [
+    {
+      label: 'Телефон',
+      href: phoneHref,
+      value: getDisplayValue(candidate.phone),
+    },
+    {
+      label: 'Telegram',
+      href: telegramHref,
+      value: getDisplayValue(candidate.tg),
+      isExternal: true,
+    },
+    {
+      label: 'Эл. почта',
+      href: emailHref,
+      value: getDisplayValue(candidate.email),
+    },
+  ];
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -31,65 +56,32 @@ function CandidateDetailContacts({
 
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_260px]">
           <dl className="grid gap-3 text-sm sm:grid-cols-2 lg:col-span-2">
-            <div className="rounded-xl border border-slate-200 px-4 py-3">
-              <dt className="text-xs font-medium uppercase tracking-[0.08em] text-slate-500">
-                Телефон
-              </dt>
-              <dd className="mt-2">
-                {phoneHref ? (
-                  <a
-                    href={phoneHref}
-                    className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
-                  >
-                    {getDisplayValue(candidate.phone)}
-                  </a>
-                ) : (
-                  <span className="font-medium text-slate-400">
-                    {getDisplayValue(candidate.phone)}
-                  </span>
-                )}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-slate-200 px-4 py-3">
-              <dt className="text-xs font-medium uppercase tracking-[0.08em] text-slate-500">
-                Telegram
-              </dt>
-              <dd className="mt-2">
-                {telegramHref ? (
-                  <a
-                    href={telegramHref}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
-                  >
-                    {getDisplayValue(candidate.tg)}
-                  </a>
-                ) : (
-                  <span className="font-medium text-slate-400">
-                    {getDisplayValue(candidate.tg)}
-                  </span>
-                )}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-slate-200 px-4 py-3">
-              <dt className="text-xs font-medium uppercase tracking-[0.08em] text-slate-500">
-                Эл. почта
-              </dt>
-              <dd className="mt-2">
-                {emailHref ? (
-                  <a
-                    href={emailHref}
-                    className="font-medium text-slate-900 transition-colors hover:text-[#1560BD]"
-                  >
-                    {getDisplayValue(candidate.email)}
-                  </a>
-                ) : (
-                  <span className="font-medium text-slate-400">
-                    {getDisplayValue(candidate.email)}
-                  </span>
-                )}
-              </dd>
-            </div>
+            {contactItems.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-xl border border-slate-200 px-4 py-3"
+              >
+                <dt className="text-xs font-medium uppercase tracking-[0.08em] text-slate-500">
+                  {item.label}
+                </dt>
+                <dd className="mt-2">
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      target={item.isExternal ? '_blank' : undefined}
+                      rel={item.isExternal ? 'noreferrer' : undefined}
+                      className="font-medium text-slate-900 transition-colors hover:text-[#1560BD] focus:outline-none focus-visible:text-[#1560BD]"
+                    >
+                      {item.value}
+                    </a>
+                  ) : (
+                    <span className="font-medium text-slate-400">
+                      {item.value}
+                    </span>
+                  )}
+                </dd>
+              </div>
+            ))}
           </dl>
 
           <div className="rounded-xl border border-slate-200 px-4 py-3">
@@ -108,14 +100,19 @@ function CandidateDetailContacts({
                 </p>
               </div>
               <span
+                aria-label={
+                  hasResumeFile
+                    ? 'Файл резюме приложен'
+                    : 'Файл резюме недоступен'
+                }
                 className={[
                   'whitespace-nowrap rounded-lg border px-3 py-2 text-sm font-medium',
                   hasResumeFile
-                    ? 'border-slate-200 text-[#1560BD]'
+                    ? 'border-slate-200 text-slate-700'
                     : 'border-slate-200 text-slate-400',
                 ].join(' ')}
               >
-                {hasResumeFile ? 'Открыть' : 'Недоступно'}
+                {hasResumeFile ? 'Приложен' : 'Недоступен'}
               </span>
             </div>
           </div>
