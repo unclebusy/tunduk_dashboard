@@ -99,21 +99,23 @@ function CandidateDetailContacts({
                     : 'В профиле нет файла резюме'}
                 </p>
               </div>
-              <span
-                aria-label={
-                  hasResumeFile
-                    ? 'Файл резюме приложен'
-                    : 'Файл резюме недоступен'
-                }
-                className={[
-                  'whitespace-nowrap rounded-lg border px-3 py-2 text-sm font-medium',
-                  hasResumeFile
-                    ? 'border-slate-200 text-slate-700'
-                    : 'border-slate-200 text-slate-400',
-                ].join(' ')}
-              >
-                {hasResumeFile ? 'Приложен' : 'Недоступен'}
-              </span>
+              {hasResumeFile ? (
+                <a
+                  href={candidate.file ?? undefined}
+                  download
+                  className="whitespace-nowrap rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-[#1560BD] transition-colors hover:bg-slate-50 hover:text-[#0f4a92]"
+                >
+                  Скачать
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="whitespace-nowrap rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-400 disabled:cursor-not-allowed"
+                >
+                  Недоступно
+                </button>
+              )}
             </div>
           </div>
         </div>
