@@ -93,11 +93,18 @@ function CandidateDetailProfile({ candidate }: CandidateDetailProfileProps) {
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="space-y-4">
           <div>
-            <h3 className="text-base font-semibold text-slate-900">Резюме</h3>
+            <h3 className="text-base font-semibold text-slate-900">Summary</h3>
             <p className="mt-1 text-sm text-slate-600">
-              Краткая выжимка по профилю для быстрой оценки
+              Текстовое резюме кандидата и краткая аналитическая выжимка
             </p>
           </div>
+
+          <article className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3">
+            <h4 className="text-sm font-semibold text-slate-900">Резюме кандидата</h4>
+            <p className="mt-2 text-sm leading-6 text-slate-700">
+              {candidate.summary}
+            </p>
+          </article>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <article className="space-y-2 rounded-xl border border-slate-200 p-4">

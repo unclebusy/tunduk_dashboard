@@ -6,8 +6,8 @@ import {
   getVerdictLabel,
 } from './candidateDetailStyles';
 import {
+  getCandidateWorkflowStatusClassName,
   getCandidateWorkflowStatusLabel,
-  getCandidateWorkflowStatusTextClassName,
 } from '../utils/candidateWorkflowStatus';
 import { getDisplayValue } from '../utils/candidateDisplay';
 
@@ -89,8 +89,8 @@ function CandidateCard({ candidate }: CandidateCardProps) {
             <dd>
               <span
                 className={[
-                  'inline-flex text-xs font-medium',
-                  getCandidateWorkflowStatusTextClassName(candidate.status),
+                  'inline-flex rounded-full border px-2.5 py-1 text-xs font-medium',
+                  getCandidateWorkflowStatusClassName(candidate.status),
                 ].join(' ')}
               >
                 {getCandidateWorkflowStatusLabel(candidate.status)}

@@ -1,10 +1,16 @@
 import { useEffect } from 'react';
 import { Link, useLocation, useParams } from 'react-router';
+import { toast } from 'sonner';
 import CandidateDetailContacts from '../components/CandidateDetailContacts';
 import CandidateDetailEvaluation from '../components/CandidateDetailEvaluation';
 import CandidateDetailHeader from '../components/CandidateDetailHeader';
 import CandidateDetailProfile from '../components/CandidateDetailProfile';
 import { useCandidatesStore } from '../store/useCandidatesStore';
+
+const defaultStatusUpdateState = {
+  isUpdating: false,
+  notification: null,
+} as const;
 
 function CandidateDetailPage() {
   const { candidateId } = useParams();
@@ -22,15 +28,7 @@ function CandidateDetailPage() {
     (state) => state.clearStatusUpdateNotification,
   );
   const statusUpdateState = useCandidatesStore((state) =>
-    candidateId
-      ? state.statusUpdateStateById[candidateId] ?? {
-          isUpdating: false,
-          notification: null,
-        }
-      : {
-          isUpdating: false,
-          notification: null,
-        },
+    candidateId ? state.statusUpdateStateById[candidateId] : undefined,
   );
   const backToCandidatesPath = `/candidates${search}`;
 
@@ -44,22 +42,21 @@ function CandidateDetailPage() {
   }, [candidateId, clearStatusUpdateNotification, loadCandidateById]);
 
   useEffect(() => {
-    if (!candidateId || !statusUpdateState.notification) {
+    if (!candidateId || !statusUpdateState?.notification) {
       return;
     }
 
-    const timeoutId = globalThis.setTimeout(() => {
-      clearStatusUpdateNotification(candidateId);
-    }, 3000);
+    const toastMethod =
+      statusUpdateState.notification.type === 'success'
+        ? toast.success
+        : toast.error;
 
-    return () => {
-      globalThis.clearTimeout(timeoutId);
-    };
-  }, [
-    candidateId,
-    clearStatusUpdateNotification,
-    statusUpdateState.notification,
-  ]);
+    toastMethod(statusUpdateState.notification.message, {
+      id: `candidate-status-${candidateId}`,
+      duration: 3000,
+    });
+    clearStatusUpdateNotification(candidateId);
+  }, [candidateId, clearStatusUpdateNotification, statusUpdateState?.notification]);
 
   if (isLoading && !candidate) {
     return (
@@ -102,26 +99,12 @@ function CandidateDetailPage() {
 
   return (
     <div className="space-y-6">
-      {statusUpdateState.notification ? (
-        <section
-          className={[
-            'rounded-2xl border p-4 shadow-sm',
-            statusUpdateState.notification.type === 'success'
-              ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-              : 'border-rose-200 bg-rose-50 text-rose-800',
-          ].join(' ')}
-          aria-live="polite"
-        >
-          <p className="text-sm font-medium">
-            {statusUpdateState.notification.message}
-          </p>
-        </section>
-      ) : null}
-
       <CandidateDetailHeader
         backTo={backToCandidatesPath}
         candidate={candidate}
-        isStatusUpdating={statusUpdateState.isUpdating}
+        isStatusUpdating={
+          (statusUpdateState ?? defaultStatusUpdateState).isUpdating
+        }
         onStatusChange={(status) => {
           void updateCandidateStatus(candidate.id, status).catch(() => undefined);
         }}

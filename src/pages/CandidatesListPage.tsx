@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import CandidateCard from '../components/CandidateCard';
+import VirtualizedCandidateList from '../components/VirtualizedCandidateList';
 import { useDebounce } from '../hooks/useDebounce';
 import type {
   CandidateSortField,
@@ -331,9 +331,7 @@ function CandidatesListPage() {
 
       <section className="space-y-3">
         {totalVisibleCandidates > 0 ? (
-          paginatedCandidates.map((candidate) => (
-            <CandidateCard key={candidate.id} candidate={candidate} />
-          ))
+          <VirtualizedCandidateList candidates={paginatedCandidates} />
         ) : (
           <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm leading-6 text-slate-600 shadow-sm">
             По текущим фильтрам кандидаты не найдены

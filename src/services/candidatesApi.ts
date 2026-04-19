@@ -1,4 +1,4 @@
-import { mockCandidatesLarge } from './candidates';
+import { mockCandidates, mockCandidatesLarge } from './candidates';
 import type { Candidate, CandidateWorkflowStatus } from '../types/candidate';
 
 const DEFAULT_NETWORK_DELAY_MS = 400;
@@ -27,7 +27,24 @@ function wait(delayMs: number): Promise<void> {
   });
 }
 
-let candidatesDb: Candidate[] = cloneCandidates(mockCandidatesLarge);
+export type CandidatesMockDataset = 'default' | 'large';
+
+const datasetMap: Record<CandidatesMockDataset, Candidate[]> = {
+  default: mockCandidates,
+  large: mockCandidatesLarge,
+};
+
+let currentDataset: CandidatesMockDataset = 'large';
+let candidatesDb: Candidate[] = cloneCandidates(datasetMap[currentDataset]);
+
+export function setCandidatesMockDataset(dataset: CandidatesMockDataset) {
+  currentDataset = dataset;
+  candidatesDb = cloneCandidates(datasetMap[dataset]);
+}
+
+export function resetCandidatesMockDataset() {
+  setCandidatesMockDataset(currentDataset);
+}
 
 export async function getCandidates(delayMs = DEFAULT_NETWORK_DELAY_MS): Promise<Candidate[]> {
   await wait(delayMs);

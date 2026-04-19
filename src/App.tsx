@@ -1,5 +1,6 @@
 import './styles.css';
 import { Link, Outlet, useLocation } from 'react-router';
+import { Toaster } from 'sonner';
 import logo from './assets/logo.svg';
 
 function App() {
@@ -28,9 +29,6 @@ function App() {
             <p className="mt-1 text-sm font-medium tracking-[0.24em] text-slate-500 sm:text-base">
               Панель управления кандидатами
             </p>
-            <p className="mt-0.5 hidden text-[11px] font-medium tracking-[0.03em] text-slate-400 lg:block">
-              создал Unclebusy
-            </p>
           </div>
 
           {isCandidateDetailPage ? (
@@ -53,6 +51,18 @@ function App() {
           <Outlet />
         </main>
       </div>
+      <Toaster
+        position="top-right"
+        richColors
+        expand={false}
+        closeButton
+        toastOptions={{
+          classNames: {
+            toast: 'border border-slate-200 shadow-lg',
+            title: 'text-sm font-medium',
+          },
+        }}
+      />
     </div>
   );
 }

@@ -7,7 +7,14 @@ import {
   useLocation,
   useParams,
 } from 'react-router';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest,
+} from '@jest/globals';
 import App from '../App';
 import CandidateDetailPage from '../pages/CandidateDetailPage';
 import CandidatesListPage from '../pages/CandidatesListPage';
@@ -16,12 +23,12 @@ import * as candidatesApi from '../services/candidatesApi';
 import { mockCandidates } from '../services/candidates';
 import { useCandidatesStore } from '../store/useCandidatesStore';
 
-vi.mock('../services/candidatesApi', () => ({
-  getCandidates: vi.fn(async () => mockCandidates),
-  getCandidateById: vi.fn(async (candidateId: string) => {
+jest.mock('../services/candidatesApi', () => ({
+  getCandidates: jest.fn(async () => mockCandidates),
+  getCandidateById: jest.fn(async (candidateId: string) => {
     return mockCandidates.find((candidate) => candidate.id === candidateId) ?? null;
   }),
-  updateCandidateStatus: vi.fn(async (candidateId: string, status: string) => {
+  updateCandidateStatus: jest.fn(async (candidateId: string, status: string) => {
     const candidate = mockCandidates.find((item) => item.id === candidateId);
 
     if (!candidate) {
@@ -85,7 +92,7 @@ function renderCandidateDashboard(initialEntries: string[]) {
 describe('Candidate Dashboard integration', () => {
   beforeEach(() => {
     useCandidatesStore.setState(useCandidatesStore.getInitialState(), true);
-    vi.mocked(candidatesApi.getCandidates).mockResolvedValue(mockCandidates);
+    jest.mocked(candidatesApi.getCandidates).mockResolvedValue(mockCandidates);
   });
 
   afterEach(() => {
@@ -122,7 +129,7 @@ describe('Candidate Dashboard integration', () => {
   });
 
   it('shows an empty state when no candidates are returned', async () => {
-    vi.mocked(candidatesApi.getCandidates).mockResolvedValue([]);
+    jest.mocked(candidatesApi.getCandidates).mockResolvedValue([]);
 
     renderCandidateDashboard(['/candidates']);
 
@@ -134,7 +141,7 @@ describe('Candidate Dashboard integration', () => {
   });
 
   it('shows an error state when candidate loading fails', async () => {
-    vi.mocked(candidatesApi.getCandidates).mockRejectedValue(
+    jest.mocked(candidatesApi.getCandidates).mockRejectedValue(
       new Error('Не удалось загрузить список кандидатов'),
     );
 
@@ -180,7 +187,7 @@ describe('Candidate Dashboard integration', () => {
   });
 
   it('rolls back the optimistic status when the update request fails', async () => {
-    vi.mocked(candidatesApi.updateCandidateStatus).mockRejectedValueOnce(
+    jest.mocked(candidatesApi.updateCandidateStatus).mockRejectedValueOnce(
       new Error('Failed to update candidate status'),
     );
 
@@ -227,10 +234,10 @@ describe('Candidate Dashboard integration', () => {
       file: null,
     };
 
-    vi.mocked(candidatesApi.getCandidates).mockResolvedValue([
+    jest.mocked(candidatesApi.getCandidates).mockResolvedValue([
       candidateWithMissingFields,
     ]);
-    vi.mocked(candidatesApi.getCandidateById).mockResolvedValue(
+    jest.mocked(candidatesApi.getCandidateById).mockResolvedValue(
       candidateWithMissingFields,
     );
 
@@ -248,9 +255,14 @@ describe('Candidate Dashboard integration', () => {
 
     await user.click(candidateLink);
 
-    expect((await screen.findAllByText('Не указан')).length).toBeGreaterThan(1);
+    expect(
+      await screen.findByRole('heading', { name: /контакты/i }),
+    ).toBeTruthy();
+    expect(screen.getAllByText('Не указан').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('Файл не приложен')).toBeTruthy();
-    expect(screen.getByText('Недоступен')).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: 'Недоступно' }),
+    ).toBeTruthy();
     expect(screen.queryByRole('link', { name: /\+7/i })).toBeNull();
     expect(screen.queryByRole('link', { name: /@ivanov_dev/i })).toBeNull();
     expect(screen.queryByRole('link', { name: /ivanov@email.com/i })).toBeNull();

@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, jest } from '@jest/globals';
 import { useDebounce } from './useDebounce';
 
 describe('useDebounce', () => {
   it('keeps the previous value until the delay passes', () => {
-    vi.useFakeTimers();
+    jest.useFakeTimers();
 
     const { result, rerender } = renderHook(
       ({ value, delayMs }) => useDebounce(value, delayMs),
@@ -24,21 +24,21 @@ describe('useDebounce', () => {
     expect(result.current).toBe('first');
 
     act(() => {
-      vi.advanceTimersByTime(299);
+      jest.advanceTimersByTime(299);
     });
 
     expect(result.current).toBe('first');
 
     act(() => {
-      vi.advanceTimersByTime(1);
+      jest.advanceTimersByTime(1);
     });
 
     expect(result.current).toBe('second');
-    vi.useRealTimers();
+    jest.useRealTimers();
   });
 
   it('cancels the previous timeout when the value changes again', () => {
-    vi.useFakeTimers();
+    jest.useFakeTimers();
 
     const { result, rerender } = renderHook(
       ({ value, delayMs }) => useDebounce(value, delayMs),
@@ -53,22 +53,22 @@ describe('useDebounce', () => {
     rerender({ value: 'second', delayMs: 300 });
 
     act(() => {
-      vi.advanceTimersByTime(200);
+      jest.advanceTimersByTime(200);
     });
 
     rerender({ value: 'third', delayMs: 300 });
 
     act(() => {
-      vi.advanceTimersByTime(100);
+      jest.advanceTimersByTime(100);
     });
 
     expect(result.current).toBe('first');
 
     act(() => {
-      vi.advanceTimersByTime(200);
+      jest.advanceTimersByTime(200);
     });
 
     expect(result.current).toBe('third');
-    vi.useRealTimers();
+    jest.useRealTimers();
   });
 });

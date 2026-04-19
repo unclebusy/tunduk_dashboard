@@ -1,12 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { mockCandidates } from '../services/candidates';
 import { useCandidatesStore } from './useCandidatesStore';
 import * as candidatesApi from '../services/candidatesApi';
 
-vi.mock('../services/candidatesApi', () => ({
-  getCandidates: vi.fn(),
-  getCandidateById: vi.fn(),
-  updateCandidateStatus: vi.fn(),
+jest.mock('../services/candidatesApi', () => ({
+  getCandidates: jest.fn(),
+  getCandidateById: jest.fn(),
+  updateCandidateStatus: jest.fn(),
 }));
 
 function createDeferredPromise<T>() {
@@ -23,7 +23,7 @@ function createDeferredPromise<T>() {
 
 describe('useCandidatesStore updateCandidateStatus', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     useCandidatesStore.setState(useCandidatesStore.getInitialState(), true);
 
     useCandidatesStore.setState({
@@ -37,7 +37,7 @@ describe('useCandidatesStore updateCandidateStatus', () => {
   it('applies optimistic status updates immediately and keeps the server result', async () => {
     const candidate = mockCandidates[0];
 
-    vi.mocked(candidatesApi.updateCandidateStatus).mockResolvedValue({
+    jest.mocked(candidatesApi.updateCandidateStatus).mockResolvedValue({
       ...candidate,
       status: 'invited',
     });
@@ -85,7 +85,7 @@ describe('useCandidatesStore updateCandidateStatus', () => {
   it('rolls back to the previous status when the request fails', async () => {
     const candidate = mockCandidates[0];
 
-    vi.mocked(candidatesApi.updateCandidateStatus).mockRejectedValue(
+    jest.mocked(candidatesApi.updateCandidateStatus).mockRejectedValue(
       new Error('Failed to update candidate status'),
     );
 
@@ -117,7 +117,7 @@ describe('useCandidatesStore updateCandidateStatus', () => {
     const firstRequest = createDeferredPromise<(typeof mockCandidates)[number]>();
     const secondRequest = createDeferredPromise<(typeof mockCandidates)[number]>();
 
-    vi.mocked(candidatesApi.updateCandidateStatus)
+    jest.mocked(candidatesApi.updateCandidateStatus)
       .mockImplementationOnce(() => firstRequest.promise)
       .mockImplementationOnce(() => secondRequest.promise);
 
