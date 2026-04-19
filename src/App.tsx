@@ -74,21 +74,23 @@ function App() {
                   }
                 });
               }}
-              className="flex cursor-pointer items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex cursor-pointer items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1560BD]/25 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span className="text-xs font-medium uppercase tracking-[0.08em] text-slate-500">
                 Большой список
               </span>
               <span
                 className={[
-                  'relative h-5 w-10 rounded-full transition-colors',
-                  isLargeDataset ? 'bg-[#1560BD]' : 'bg-slate-300',
+                  'relative h-6 w-11 shrink-0 rounded-full transition-all duration-200 ease-out',
+                  isLargeDataset
+                    ? 'bg-[#1560BD] shadow-[inset_0_0_0_1px_rgba(21,96,189,0.12)]'
+                    : 'bg-slate-300 shadow-[inset_0_0_0_1px_rgba(148,163,184,0.2)]',
                 ].join(' ')}
               >
                 <span
                   className={[
-                    'absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform',
-                    isLargeDataset ? 'translate-x-5' : 'translate-x-0.5',
+                    'absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm ring-1 ring-black/5 transition-transform duration-200 ease-out will-change-transform',
+                    isLargeDataset ? 'translate-x-5' : 'translate-x-0',
                   ].join(' ')}
                 />
               </span>
